@@ -124,6 +124,10 @@ mla_shortcode_slug="tag-cloud"
 		margin-left: 0;
 		vertical-align: top;
 	}
+
+	#[+selector+].term-list-checklist {
+		list-style: none;
+	}
 	/* see mla_term_list() in media-library-assistant/includes/class-mla-shortcode-support.php */
 </style>
 
@@ -157,7 +161,7 @@ mla_shortcode_slug="term-list"
 <[+itemtag+] name='tax_input[[+taxonomy+]][]' class='term-list term-list-dropdown term-list-taxonomy-[+taxonomy+]' id='[+selector+]'>
 
 <!-- template="term-list-dropdown-item-markup" -->
-	<[+termtag+] class='term-list-term term-list-dropdown-term level-[+level+]' value='[+thevalue+]' [+selected+]>[+thelabel+]</[+termtag+]>
+	<[+termtag+] class='term-list-term term-list-dropdown-term level-[+current_level+]' value='[+thevalue+]' [+selected+]>[+thelabel+]</[+termtag+]>
 	[+children+]
 
 <!-- template="term-list-dropdown-close-markup" -->
@@ -169,7 +173,7 @@ mla_shortcode_slug="term-list"
 <[+itemtag+] id='[+selector+]' class='term-list term-list-checklist term-list-taxonomy-[+taxonomy+]'>
 
 <!-- template="term-list-checklist-item-markup" -->
-	<[+termtag+] class='term-list-term term-list-checklist-term level-[+level+] [+popular+]' id='[+termtag_id+]'><label class='selectit'><input name='tax_input[[+taxonomy+]][]' id='in-[+taxonomy+]-[+thevalue+]' type='checkbox' value='[+thevalue+]' [+selected+]>[+thelabel+]</label>[+children+]</[+termtag+]>
+	<[+termtag+] class='term-list-term term-list-checklist-term level-[+current_level+] [+popular+]' id='[+termtag_id+]'><label class='selectit'><input name='tax_input[[+taxonomy+]][]' id='in-[+taxonomy+]-[+thevalue+]' type='checkbox' value='[+thevalue+]' [+selected+]>[+thelabel+]</label>[+children+]</[+termtag+]>
 
 <!-- template="term-list-checklist-close-markup" -->
 </[+itemtag+]>

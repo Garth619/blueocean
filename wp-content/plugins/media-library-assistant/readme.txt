@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://fairtradejudaica.org/make-a-difference/donate/
 Tags: attachments, gallery, images, media, media library, tag cloud, media-tags, media tags, tags, media categories, categories, IPTC, EXIF, XMP, GPS, PDF, metadata, photos, photographs, photoblog, photo albums, lightroom, photoshop, MIME, mime-type, icon, upload, file extensions, WPML, Polylang, multilanguage, multilingual, localization
 Requires at least: 3.5.0
-Tested up to: 4.5.2
-Stable tag: 2.31
+Tested up to: 4.6
+Stable tag: 2.33
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -172,22 +172,55 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 2.33 =
+* New: The `terms:` data substitution parameter prefix has been enhanced to allow a specific term slug as an alternative to the terms assigned to an item.
+* New: The `mla-insert-fixit.php` example plugin has been enhanced with a "Copy Item terms to Parent Post/Page" tool.
+* Fix: On new MLA installs, WordPress **"The plugin does not have a valid header"** errors have been corrected. The error occured when "Activate Plugin" was clicked following a successful installation. To fix the problem, the `/examples/` directory has been divided into `plugins` and `themes` subdirectories. All of the example plugins have been moved to the `/plugins/` subdirectory.
+* Fix: For `[mla_gallery]`, restore `mla_nolink_text` operation.
+
+= 2.32 =
+* New: The **Documentation/Example Plugins submenu** lets you browse the list of MLA example plugins, install or update them in the Plugins/Installed Plugins area and see which examples you have already installed. See the [Other Notes section](http://wordpress.org/extend/plugins/media-library-assistant/other_notes/ "Click here, then scroll down") section or the Settings/Media Library Assistant Documentation tab for more information.
+* New: For the Media/Assistant submenu table, you can now ceate **a filter dropdown for custom field values** as an alternative to taxonomy terms. The Taxonomy Support section of the Settings/Media Library Assistant General tab lets you select a custom field and set the Filter option to use it.
+* New: For the `[mla_gallery]` shortcode, **`link=download` is now available** to force a download of the gallery item.
+* New: A new substitution parameter Field-level option/format value, **",kbmb(t,k,m)"**, formats values such as file size with kilobyte and megabyte abbreviations.
+* New: Mapping support can be extended to **"front end" file upload plugins** by adding an **"MLA_AJAX_EXCEPTIONS" entry to the `wp-config.php` file.
+* New: A new example plugin, `mla-ui-elements-example.php`, provides shortcodes to improve the user experience for `[mla-term-list]`, `[mla_tag_cloud]` and `[mla_gallery]` shortcodes.
+* New: The `mla-insert-fixit.php` example plugin has been enhanced with "Post/Page insert Modification" tools. The new tools let you add/replace/delete attributes of the `<img >` tags for items inserted in posts/pages. New "Post to Library" and "Parent to Library" tools compose an item Title from the post/page in which it appears.
+* New: The `mla-simple-mapping-hooks-example.php` example plugin has been enhanced with a "update_menu_order" filter that updates the WordPress `menu_order` standard field.
+* New: The `mla-substitution-parameter-hooks-example.php` example plugin has been enhanced with "parent_terms:" and "page_terms:" prefixes that provide access to taxonomy terms assigned to an item's parent post/page and terms of the post/page on which the `[mla_gallery]` shortcode appears.
+* New: The `mla-substitution-parameter-hooks-example.php` example plugin has been enhanced with a "conditional:" prefix that returns different values during the initial upload process Vs other contexts.
+* New: A new example plugin, `mla-multi-wp-query-example.php`, provides an [mla_gallery] parameter to combine items from each of multiple "taxonomy=term" queries.
+* New: The `mla-custom-taxonomy-example.php` example plugin has been limited to defining three new custom taxonomies. All other functions have been moved to the `mla-ui-elements-example.php` example plugin.
+* New: Separate `mla_phrase_delimiter` and `mla_term_delimiter` parameters have been added to the `[mla_gallery]` terms search parameters.
+* New: The "request:" prefix now handles multi-level array values by supporting compound names, e.g., `tax_input.attachment_category`.
+* New: For the `[mla_gallery]` shortcode, `page_parent` and `page_mime_type` are now available as Gallery-specific Substitution Parameters.
+* New: For the `[mla_gallery]` shortcode, `found_rows`, `current_rows` and `max_num_pages` are now available as substitution parameters for style and markup templates.
+* Fix: Corrected handling of Media Manager Modal (popup) Window "Search Media" text box for WP 4.6
+* Fix: For the `[mla_gallery]` shortcode, the "index" attachment-specific substitution parameter is now set to the item's place in the entire gallery for the `mla_output=` "previous_link", "current_link" and "next_link" values.
+* Fix: A JavaScript conflict with the ToolSet Views Editor "Add Media" feature has been resolved.
+* Fix: For the `[mla_gallery]` shortcode, a substitution parameter expansion defect (introduced in MLA v2.31) that affected parameters such as `mla_caption` has been corrected.
+* Fix: Access to "attachment metadata" and `image_meta` during the initial upload process has been restored.
+* Fix: For the `[mla_tag_cloud]` shortcode, defects in the handling of the "orderby" parameter, e.g. random sorting, have been corrected..
+* Fix: Parsing of the `mla_terms_search_phrases` string has been improved to handle quoted phrases that include the phrase or term delimiters.
+* Fix: For the `[mla_gallery]` shortcode, invalid `mla_output` values are now replaced with the default, "gallery".
+* Fix: For the `[mla_term_list]` shortcode, default style templates are loaded for the "checklist" and "dropdown" formats.
+
 = 2.31 =
 * Fix: Remove call to `xdebug_get_function_stack()` causing fatal PHP error.
 
 = 2.30 =
-* New: A **new shortcode, [mla_term_list],** composes lists, dropdown controls and checkbox lists for flat and hierarchical taxonomies.
-* New: A new example plugin, `/media-library-assistant/examples/mla-term-list-hooks-example.php.txt` has been added. It documents the filters (hooks) provided by the `[mla_term_list]` shortcode.
-* New: A new example plugin, `/media-library-assistant/examples/mla-custom-taxonomy-example.php.txt` has been added. It defines three custom taxonomies and shows how to combine `[mla_term_list]` and `[mla_gallery]` terms search parameters.
+* New: A **new shortcode, [mla_term_list],** composes lists, dropdown controls and checkbox lists for flat and hierarchical taxonomies. See the [Other Notes section](http://wordpress.org/extend/plugins/media-library-assistant/other_notes/ "Click here, then scroll down") section or the Settings/Media Library Assistant Documentation tab for more information.
+* New: A new example plugin, `/media-library-assistant/examples/plugins/mla-term-list-hooks-example.php` has been added. It documents the filters (hooks) provided by the `[mla_term_list]` shortcode.
+* New: A new example plugin, `/media-library-assistant/examples/plugins/mla-custom-taxonomy-example.php` has been added. It defines three custom taxonomies and shows how to combine `[mla_term_list]` and `[mla_gallery]` terms search parameters.
 * New: The Settings/Media Library Assistant "MLA Gallery" tab has been renamed "Shortcodes" to more accurately reflect its content. An expanded jump table makes it easier to access the style and markup sections for each shortcode.
 * New: A data element specification has been added to the taxonomy terms data substitution prefix. For example, you can get the term slug value(s) by coding `[+terms:attachment_category(slug)+]`.
 * New: **Field-level substitution parameter filters (hooks)** have been added to allow you to create and access custom substitution parameters and format options.
-* New: A new example plugin, `/media-library-assistant/examples/mla-substitution-parameter-hooks-example.php.txt` has been added. It documents all the new hooks and adds a custom "parent_terms:" prefix to illustrate their use.
+* New: A new example plugin, `/media-library-assistant/examples/plugins/mla-substitution-parameter-hooks-example.php` has been added. It documents all the new hooks and adds a custom "parent_terms:" prefix to illustrate their use.
 * New: A new "Taxonomy term keyword(s) search" parameter has been added to change the delimiter used to separate terms in the input list. 
-* New: A new example plugin, `/media-library-assistant/examples/mla-bulk-edit-remap-example.php.txt` has been added. It performs IPTC/EXIF and Custom Field mapping at the conclusion of a Bulk Edit action, so data sources like "terms:" are properly applied.
-* New: A new example plugin, `/media-library-assistant/examples/mla-current-user-example.php.txt` has been added. It changes the `[mla_gallery]` parameter `author=current` to the ID value of the current logged in user.
-* New: The `/media-library-assistant/examples/mla-project-slug-example.php.txt` example plugin has been enhanced to allow one or more `attachment_tags` terms to be excluded from the filtered results.
-* New: The `/media-library-assistant/examples/mla-insert-fixit.php.txt` example plugin has been enhanced to link unattached items that are inserted in or are the Featured Image for a post or page.
+* New: A new example plugin, `/media-library-assistant/examples/plugins/mla-bulk-edit-remap-example.php` has been added. It performs IPTC/EXIF and Custom Field mapping at the conclusion of a Bulk Edit action, so data sources like "terms:" are properly applied.
+* New: A new example plugin, `/media-library-assistant/examples/plugins/mla-current-user-example.php` has been added. It changes the `[mla_gallery]` parameter `author=current` to the ID value of the current logged in user.
+* New: The `/media-library-assistant/examples/plugins/mla-project-slug-example.php` example plugin has been enhanced to allow one or more `attachment_tags` terms to be excluded from the filtered results.
+* New: The `/media-library-assistant/examples/plugins/mla-insert-fixit.php` example plugin has been enhanced to link unattached items that are inserted in or are the Featured Image for a post or page.
 * New: Additional debug log messages have been added for IPTC/EXIF and Custom Field mapping AJAX actions.
 * Fix: The `mla-media-modal-scripts.js` script has been changed to **avoid "Uncaught RangeError" problems**.
 * Fix: The `posts_per_page` parameter is no longer ignored when the data selection parameter is `ids=` (or `include=`).
@@ -196,28 +229,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 * Fix: Polylang version 1.8+ API changes have been incorporated, eliminating "deprecated" warning messages.
 * Fix: Files with valid, but empty XMP metadata that contain no namespaces are now handled without generating PHP Warning messages.
 
-= 2.25 =
-* New: **Argument Substitution Parameters** can be added to custom markup templates to provide default values for shortcode parameters. See the [Other Notes section](http://wordpress.org/extend/plugins/media-library-assistant/other_notes/ "Click here, then scroll down") section or the Settings/Media Library Assistant Documentation tab for more information.
-* New: For the Media/Assistant submenu, the **list/grid view switcher** has been added so you can access the WordPress Media/Library grid view even if the Media/Library submenu entry has been suppressed. A new option in the Settings/Media Library Assistant General tab controls the switcher display.
-* New: Two new Settings/Media Library Assistant General tab options, **"Delete Option Settings"** and **"Delete Option Backups"**, let you delete MLA settings from the WordPress options table and/or MLA settings backup files when you delete the plugin. The default is to retain settings and backup files, as in previous MLA versions.
-* New: The `/media-library-assistant/examples/mla-hooks-example.php.txt` example plugin has been enhanced with a new "custom SQL" example. The new example selects one or more "recently uploaded" images that are attached to a post/page.
-* New: The `/media-library-assistant/examples/mla-metadata-mapping-hooks-example.php.txt` example plugin has been enhanced to restore IPTC/EXIF/XMP metadata to files processed by the Easy Watermark plugin during the upload process.
-* New: A performance improvement has been made to the `/media-library-assistant/examples/mla-tax-query-example.php.txt` example plugin, replacing two separate SQL queries with a single query/subquery.
-* New: For the Settings/Media Library Assistant Debug tab, you can enter "0" (zero) in the MLA Reporting text box to suppress all MLA debug messages but keep the Debug tab active.
-* New: Error reporting for damaged `mla-default-mime-types.tpl` files is now optional, and some additional information has been added to the messages.
-* Fix: When invoking the Media/Edit Media submenu from the Media/Assistant submenu "Edit" rollover action, "Update" and "Trash"/"Delete Permanently" actions preserve Media/Assistant as their source.
-* Fix: **XML parsing has been improved** to avoid PHP Warning messages for documents with empty `rdf:description` sections.
-* Fix: Initial values are provided for the `$post` object when `[mla_tag_cloud]` is called without a parent post/page.
-* Fix: Default values for `itemtag`, `termtag` and `captiontag` are provided when a custom markup template is used with `[mla_tag_cloud]`.
-* Fix: A new filter, `mla_tag_cloud_raw_attributes` has been added to match the corresponding `[mla_gallery]` filter. The `mla-cloud-hooks-example.php.txt` example plugin has been updated to document the new filter.
-* Fix: For XMLRPC calls, the full plugin functionality is loaded so Media Item uploads trigger IPTC/EXIF and Custom Field mapping rules.
-* Fix: The Relevanssi "prevent default request" filter definitions have been repaired, eliminating some PHP warning messages and restoring proper queries in the `[mla_gallery]` shortcode.
-* Fix: Changes have been made in `mla-media-modal-scripts.js` to increase compatibility with Enhanced Media Library, by wpUXsolutions.
-* Fix: Changes have been made in the Media/Assistant submenu screen and in `mla-media-modal-scripts.js` to increase compatibility with WP Media Folder, by JoomUnited.
-* Fix: Some template and metadata parsing error messages have been converted from unconditional `error_log()` calls to MLA Debug calls so they can be suppressed when not needed.
-* Fix: Information on the `[mla_tag_cloud]` itemtag, termtag and captiontag parameters has been added to the Documentation tab.
-
-= 2.00 - 2.24 =
+= 2.00 - 2.25 =
+* 2.25 - Default shortcode parameters in templates, list/grid view switcher, delete option settings, better XML parsing. Eight enhancements in all, eleven fixes.
 * 2.24 - Corrects the MLA error that suppressed Admin Columns functions for Posts, Pages, Custom Post Types, Users and Comments.
 * 2.23 - Admin Columns 2.4.9 fixes, EXIF/XMP/PDF improvements, Posts, Pages and custom Post Types in `[mla_gallery]` display. Seven enhancements in all, six fixes.
 * 2.22 - Support for the "Admin Columns" plugin, PHP7 and "enclosing shortcode" syntax. Better performance, new filters and examples. Eight enhancements in all, eight fixes.
@@ -282,8 +295,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.31 =
-Remove call to `xdebug_get_function_stack()` causing fatal PHP error.
+= 2.33 =
+Fix WordPress "The plugin does not have a valid header" errors on initial MLA installs. Two enhancements, one other fix.
 
 == Other Notes ==
 
@@ -297,7 +310,42 @@ Media Library Assistant includes many images drawn (with permission) from the [C
 
 <strong>Many thanks</strong> to Aurovrata Venet, Il'ya Karastel and Kristian Adolfsson for testing and advising on the multilingual support features!
 
-<h4>*NEW* Argument Substitution Parameters for custom markup templates</h4>
+<h4>**New** The Example Plugins</h4>
+
+The MLA example plugins have been developed to illustrate practical applications that use the hooks MLA provides to enhance the admin-mode screens and front-end content produced by the MLA shortcodes. Most of the examples are drawn from topics in the MLA Support Forum.
+
+The Documentation/Example Plugins submenu lets you browse the list of MLA example plugins, install or update them in the Plugins/Installed Plugins area and see which examples you have already installed. To activate, deactivate or delete the plugins you must go to the Plugins/Installed Plugins admin submenu.
+
+The Example plugins submenu lists all of the MLA example plugins and identifies those already in the Installed Plugins area. In the submenu:
+
+* the "Screen Options" dropdown area lets you choose which columns to display and how many items appear on each page
+* the "Help" dropdown area gives you a brief explanation of the submenu content and functions
+* the "Search Plugins" text box lets you filter the display to items containing one or more keywords or phrases
+* bulk and rollover actions are provided to install or update example plugins
+* the table can be sorted by any of the displayed columns
+
+Once you have installed an example plugin you can use the WordPress Plugins/Editor submenu to view the source code and (with extreme caution) make small changes to the code. **Be very careful if you choose to modify the code!** Making changes to active plugins is not recommended. If your changes cause a fatal error, the plugin will be automatically deactivated. It is much safer to download the file(s) or use FTP access to your site to modify the code offline in a more robust HTML/PHP editor.
+
+You can use the "Download" rollover action to download a plugin to your local system. Once you have made your modifications you can copy the plugin to a compressed file (ZIP archive) and then upload it to your server with the Plugins/Add New (Upload Plugin) admin submenu. 
+
+If you do make changes to the example plugin code the best practice is to save the modified file(s) under a different name, so your changes won't be lost in a future update. If you want to retain the file name, consider changing the version number, e.g. adding 100 to the MLA value, so you can more easily identify the plugins you have modified. 
+
+<h4>**New** MLA Term List Shortcode</h4>
+
+The `[mla_term_list]` shortcode function displays hierarchical taxonomy terms in a variety of formats; link lists, dropdown controls and checkbox lists. The list works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories) MLA Term List enhancements for lists and controls include: 
+
+* Full support for WordPress categories, tags and custom taxonomies. You can select from any taxonomy or list of taxonomies defined in your site.
+* Several display formats, including "flat", "list", "dropdown" and "checklist".
+* Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list" formats to suit any need.
+* Access to a wide range of content using the term-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.
+* Display Style and Display Content parameters for easy customization of the list display and the destination/value behind each term. 
+* A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins. 
+
+The `[mla_term_list]` shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. Read and follow the rules and guidelines in the "Entering Long/Complex Shortcodes" Documentation section to get the results you want. 
+
+Many of the `[mla_term_list]` concepts and shortcode parameters are modeled after the [mla_gallery] and [mla_tag_cloud] shortcodes, so the learning curve is shorter. Differences and parameters unique to the list are given in the sections below. 
+
+<h4>Argument Substitution Parameters for custom markup templates</h4>
 
 A markup template can include default values for any of the shortcode parameters and values you define for your own use, e.g., you can add <code>columns=1</code> to the arguments section to change the MLA default value whenever the template is used. The argument substitution parameter(s) you define in the markup template are treated as if you had added them to the shortcode that uses the template, but parameters you actually use in the shortcode will overide the default values you code in the arguments section. For example, if the arguments section of your "blue-table" markup template looks like: 
 
@@ -473,73 +521,3 @@ When rules are defined in the IPTC/EXIF "Taxonomy term mapping section" they ext
 * When Replication <strong>is not active</strong>, the term is created in the current language only. It is not copied to any other active language and will not be assigned to items in any language other than the current language.
 
 If you use Replication to automatically create terms in non-current languages they will be created with the same text value as the source term in the current language. You can always go to the taxonomy edit page and change the source text to an appropriate value for the other language(s). If you do not use Replication you can always go to the taxonomy edit page and add translations with an appropriate value for the other language(s).
-
-<h4>Thumbnail Substitution Support, mla_viewer</h4>
-
-<strong>NOTE: Google has discontinued the File Viewer support for thumbnail images.</strong> This solution supports dynamic thumbnail image generation for PDF and Postscript documents on your site's server. You can also assign a "Featured Image" to any Media Library item. For non-image items such as Microsoft Office documents the featured image will replace the MIME-type icon or document title in an <code>[mla_gallery]</code> display. Simply go to the Media/Edit Media screen, scroll down to the "Featured Image" meta box and select an image as you would for a post or page. 
-
-The dynamic thumbnail image generation for PDF and Postscript documents uses the PHP <code>Imagick</code> class, which <strong>requires ImageMagick and Ghostscript</strong> to be installed on your server. If you need help installing them, look at this <a href="https://wordpress.org/support/topic/nothing-but-error-messages" title="Help with installation" target="_blank">PDF Thumbnails support topic</a>. If you don't have them on your server you can still use the Featured Image support to supply thumbnails for your non-image items. 
-
-Ten <code>[mla_gallery]</code> parameters provide an easy way to simulate thumbnail images for the non-image file types.
-
-* <strong>mla_viewer</strong> - must be "true" or "single" to enable thumbnail substitution. Use "true" unless you experience generation failures due to memory limitations on your server. Use "single" to generate one thumbnail at a time, which may be slower but requires less memory.
-* <strong>mla_viewer_extensions</strong> - a comma-delimited list of the file extensions to be processed; the default is "ai,eps,pdf,ps" (do not include the dot (".") preceding the file extension). You may add or remove extensions (when support for additional types becomes available).
-* <strong>mla_viewer_limit</strong> - the upper limit in megabytes (default none) on the size of the file to be processed. You can set this to avoid processing large documents if performance becomes an issue.
-* <strong>mla_viewer_width</strong> - the maxinum width in pixels (default "150") of the thumbnail image. The height (unless also specified) will be adjusted to maintain the page proportions.
-* <strong>mla_viewer_height</strong> - the maxinum width in pixels (default "0") of the thumbnail image. The width (unless also specified) will be adjusted to maintain the page proportions.
-* <strong>mla_viewer_best_fit</strong> - retain page proportions (default "false") when both height and width are explicitly stated. If "false", the image will be stretched as required to exactly fit the height and width. If "true", the image will be reduced in size to fit within the bounds, but proportions will be preserved. For example, a typical page is 612 pixels wide and 792 pixels tall. If you set width and height to 300 and set best_fit to true, the thumbnail will be reduced to 231 pixels wide by 300 pixels tall.
-* <strong>mla_viewer_page</strong> - the page number (default "1") to be used for the thumbnail image. If the page does not exist for a particular document the first page will be used instead.
-* <strong>mla_viewer_resolution</strong> - the pixels/inch resolution (default 72) of the page before reduction. If you set this to a higher number, such as 300, you will improve thumbnail quality at the expense of additional processing time.
-* <strong>mla_viewer_quality</strong> - the compression quality (default 90) of the final page. You can set this to a value between 1 and 100 to get smaller files at the expense of image quality; 1 is smallest/worst and 100 is largest/best. 
-* <strong>mla_viewer_type</strong> - the MIME type (default image/jpeg) of the final thumbnail. You can, for example, set this to "image/png" to retain a transparent background instead of the white jpeg background.</td>
-
-When this feature is active, gallery items for which WordPress can generate a thumbnail image are not altered. If WordPress generation fails, the "Featured Image" will be used, if one is specified for the item. If the item does not have a Featured Image, supported file/MIME types (PDF for now) will have a gallery thumbnail generated dynamically. If all else fails, the thumbnail is replaced by an "img" html tag whose "src" attribute contains a url reference to the appropriate icon for the file/MIME type.
-
-Four options in the Settings/Media Library Assistant MLA Gallery tab allow control over mla_viewer operation:
-
-* <strong>Enable thumbnail substitution</strong><br />
-Check this option to allow the "mla_viewer" to generate thumbnail images for PDF documents. Thumbnails are generated dynamically, each time the item appears in an <code>[mla_gallery]</code> display.
-* <strong>Enable Featured Images</strong><br />
-Check this option to extend Featured Image support to all Media Library items. The Featured Image can be used as a thumbnail image for the item in an <code>[mla_gallery]</code> display.
-* <strong>Enable explicit Ghostscript check</strong><br />
-Check this option to enable the explicit check for Ghostscript support required for thumbnail generation. If your Ghostscript software is in a non-standard location, unchecking this option bypasses the check. Bad things can happen if Ghostscript is missing but ImageMagick is present, so leave this option checked unless you know it is safe to turn it off.
-* <strong>Ghostscript path</strong><br />
-If your Ghostscript software is in a non-standard location, enter the full path and name of the executable here. The value you enter will be used as-is and the search for Ghostscript in the usual locations will be bypassed.
-
-<h3>Field-level Substitution Parameters</h3>
-
-Field-level substitution parameters let you access query arguments, custom fields, taxonomy terms and attachment metadata for display in an MLA gallery or in an MLA tag cloud. You can also use them in IPTC/EXIF or Custom Field mapping rules. For field-level parameters, the value you code within the surrounding the ('[+' and '+]' or '{+' and '+}') delimiters has three parts; the prefix, the field name (or template content) and, if desired, an option/format value.
-
-<h4>Prefix values</h4>
-
-There are ten prefix values for field-level parameters.
-
-* <strong>request</strong> - The parameters defined in the <code>$_REQUEST</code> array; the "query strings" sent from the browser.
-* <strong>query</strong> - The parameters defined in the <code>[mla_gallery]</code> shortcode.
-* <strong>custom</strong> - WordPress Custom Fields, which you can define and populate on the Edit Media screen or map from various sources on the Settings/Media Library Assistant Custom and IPTC/EXIF tabs.
-* <strong>terms</strong> - WordPress Category, tag or custom taxonomy terms.
-* <strong>meta</strong> - WordPress attachment metadata, if any, embedded in the image/audio/video file.
-* <strong>pdf</strong> - The Document Information Dictionary (D.I.D.)and XMP metadata, if any, embedded in a PDF file.
-* <strong>iptc</strong> - The IPTC (International Press Telecommunications Council) metadata, if any, embedded in the image file.
-* <strong>exif</strong> - The EXIF (EXchangeable Image File) metadata, if any, embedded in a JPEG DCT or TIFF Rev 6.0 image file.
-* <strong>xmp</strong> -  Data defined by the Extensible Metadata Platform (XMP) framework, if present. XMP metadata varies from image to image but is often extensive.
-* <strong>template</strong> - A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely.
-
-<h4>Field-level option/format values</h4>
-
-You can use a field-level option or format value to specify the treatment of fields with multiple values or to change the format of a field for display/mapping purposes.
-
-Two "option" values change the treatment of fields with multiple values:
-
-* <strong>,single</strong> - If this option is present, only the first value of the field will be returned..
-* <strong>,export</strong> - If this option is present, the PHP <code>var_export</code> function is used to return a string representation of all the elements in an array field.
-
-Seven "format" values help you reformat fields or encode them for use in HTML attributes and tags:
-
-* <strong>,raw</strong> - If you want to avoid filtering a value through the WordPress <code>sanitize_text_field()</code> function you can add the ",raw" option.
-* <strong>,commas</strong> - For numeric data source parameters such as "file_size" you can add the ",commas" option to format the value for display purposes.
-* <strong>,attr</strong> - If you use a substitution parameter in an HTML attribute such as the <code>title</code> attribute of a hyperlink (<code>a</code>) or <code>img</code> tag you can add the ",attr" option to encode the <, >, &, " and ' (less than, greater than, ampersand, double quote and single quote) characters.
-* <strong>,url</strong> - If you use a substitution parameter in an HTML <code>href</code> attribute such as a hyperlink (<code>a</code>) or <code>img</code> tag you can add the ",url" option to convert special characters such as quotes, spaces and ampersands to their URL-encoded equivalents.
-* <strong>,fraction(f,s)</strong> - Many of the EXIF metadata fields are expressed as "rational" quantities, i.e., separate numerator and denominator values separated by a slash. The "fraction" format converts these to a more useful format.
-* <strong>,timestamp(f)</strong> - Many date and time values are stored as a UNIX timestamp. The ",timestamp" format converts a timestamp into a variety of date and/or time string formats, using the PHP date() function.
-* <strong>,date(f)</strong> - Many EXIF date and time values such as DateTimeOriginal and DateTimeDigitized are stored as strings with a format of "YYYY:MM:DD HH:MM:SS". You can format these values by using the ",date" format.

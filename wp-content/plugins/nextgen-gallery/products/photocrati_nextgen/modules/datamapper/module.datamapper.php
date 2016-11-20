@@ -1,11 +1,4 @@
 <?php
-
-/***
- {
-	Module: photocrati-datamapper,
-	Depends: { photocrati-validation }
- }
-***/
 class M_DataMapper extends C_Base_Module
 {
 	function define()
@@ -14,7 +7,7 @@ class M_DataMapper extends C_Base_Module
 			'photocrati-datamapper',
 			'DataMapper',
 			'Provides a database abstraction layer following the DataMapper pattern',
-			'0.9',
+			'0.10',
 			'https://www.imagely.com',
 			'Photocrati Media',
 			'https://www.imagely.com'

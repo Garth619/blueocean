@@ -782,9 +782,19 @@ class MLAQuery {
 					$clean_request[ $key ] = absint( $value );
 					break;
 				/*
-				 * ['mla_filter_term'] - filter by category or tag ID; -1 allowed
+				 * ['mla_filter_term'] - filter by taxonomy term ID (-1 allowed), or by custom field
 				 */
 				case 'mla_filter_term':
+					if ( MLACoreOptions::MLA_FILTER_METAKEY == MLACore::mla_taxonomy_support('', 'filter') ) {
+						if ( MLACoreOptions::ALL_MLA_FILTER_METAKEY != $value ) {
+							$clean_request['mla-metakey'] = MLACore::mla_taxonomy_support('', 'metakey');
+							$clean_request['mla-metavalue'] = stripslashes( $value );
+						}
+//error_log( __LINE__ . ' _prepare_list_table_query clean_request = ' . var_export( $clean_request, true ), 0 );
+						
+						break;
+					}
+					
 					$clean_request[ $key ] = intval( $value );
 					break;
 				case 'order':
@@ -1230,6 +1240,83 @@ class MLAQuery {
 	}
 
 	/**
+	 * Process a terms search term or phrase list with quoted phrases and variable delimiters
+	 *
+	 * @since 2.31
+	 *
+	 * @param	string	phrases, e.g., ( "a phrase" separate phrase ) without parens, space delimited
+	 * @param	string	inter-term/phrase delimiter
+	 * @param	boolean	true escape backslash values, false to preserve them
+	 *
+	 * @return	array	individual arguments, e.g. array( 0 => '"a phrase"', 1 => 'separate', 2 => 'phrase' )
+	 */
+	private static function _parse_terms_search( $whole_string, $delimiter = ',', $full_parse = false ) {
+		$trim_list = " \n\t\r\0\x0B,";
+		if ( false === strpos( $trim_list, $delimiter ) ) {
+			$trim_list .= $delimiter;
+		}
+		
+		$whole_string = trim( $whole_string, $trim_list );
+		$phrases = array();
+
+		while ( strlen( $whole_string ) ) {
+			$argument = '';
+			$index = 0;
+
+			// Check for enclosing quotes
+			$current_delimiter = $whole_string[0];
+			if ( '\'' == $current_delimiter || '"' == $current_delimiter ) {
+				$index++;
+			} else {
+				$current_delimiter = '';
+			}
+
+			while ( $index < strlen( $whole_string ) ) {
+				$byte = $whole_string[ $index++ ];
+				if ( '\\' == $byte && $full_parse ) {
+					// could be a 1- to 3-digit octal value
+					$digit_limit = $index + 3;
+					$digit_index = $index;
+					while ( $digit_index < $digit_limit ) {
+						if ( ! ctype_digit( $whole_string[ $digit_index ] ) ) {
+							break;
+						} else {
+							$digit_index++;
+						}
+					}
+
+					if ( $digit_count = $digit_index - $index ) {
+						$argument .= chr( octdec( substr( $whole_string, $index, $digit_count ) ) );
+						$index += $digit_count;
+					} else {
+						// accept the character following the backslash
+						$argument .= $whole_string[ $index ];
+						$index++;
+					}
+				} else {
+					// just another character, but check for closing delimiter
+					if ( $current_delimiter == $byte || ( empty( $current_delimiter ) && $delimiter == $byte ) ) {
+						break;
+					}
+
+					$argument .= $byte;
+				}
+			} // index < strlen
+
+			if ( $full_parse ) {
+				$phrases[] = $argument;
+			} else {
+				// Restore quotes for word-boundary check
+				$phrases[] = $current_delimiter . $argument . $current_delimiter;
+			}
+			
+			$whole_string = trim( substr( $whole_string, $index ), $trim_list );
+		} // strlen( $whole_string )
+
+		return $phrases;
+	}
+
+	/**
 	 * Adds a keyword search to the WHERE clause, if required
 	 * 
 	 * Defined as public because it's a filter.
@@ -1255,7 +1342,10 @@ class MLAQuery {
 		 */
 		if ( isset( self::$search_parameters['mla_terms_search']['phrases'] ) ) {
 			$terms_search_parameters = self::$search_parameters['mla_terms_search'];
-			$terms = array_map( 'trim', explode( $terms_search_parameters['phrase_delimiter'], $terms_search_parameters['phrases'] ) );
+			$term_delimiter = isset( $terms_search_parameters['term_delimiter'] ) ? $terms_search_parameters['term_delimiter'] : ',';
+			$phrase_delimiter = isset( $terms_search_parameters['phrase_delimiter'] ) ? $terms_search_parameters['phrase_delimiter'] : ' ';
+
+			$terms = self::_parse_terms_search( $terms_search_parameters['phrases'], $term_delimiter );
 			if ( 1 < count( $terms ) ) {
 				$terms_connector = '(';			
 			} else {
@@ -1263,16 +1353,17 @@ class MLAQuery {
 			}
 
 			foreach ( $terms as $term ) {
-				preg_match_all('/".*?("|$)|\'.*?(\'|$)|((?<=[\t ",+])|^)[^\t ",+]+/', $term, $matches);
-				$phrases = array_map('MLAQuery::mla_search_terms_tidy', $matches[0]);
 
-				/*
-				 * Find the quoted phrases for a word-boundary check
-				 */
+				// Find the quoted phrases for a word-boundary check
+				$phrases = self::_parse_terms_search( $term, $phrase_delimiter, false );
 				$quoted = array();
 				foreach ( $phrases as $index => $phrase ) {
-					$quoted[ $index ] = ( '"' == $matches[1][$index] ) || ( "'" == $matches[2][$index] );
+					$delimiter = substr( $phrase, 0, 1 );
+					$quoted[ $index ] = ( '"' == $delimiter ) || ( "'" == $delimiter );
 				}
+
+				// Strip delimiters and escape backslashes
+				$phrases = self::_parse_terms_search( $term, $phrase_delimiter, true );
 
 				$tax_terms = array();
 				$tax_counts = array();

@@ -146,6 +146,50 @@ class MLA_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Get dropdown box of custom field values to filter by, if available
+	 *
+	 * @since 2.32
+	 *
+	 * @param	string	currently selected value || '' (default)
+	 * @param	array	additional wp_dropdown_categories options; default empty
+	 *
+	 * @return	string	HTML markup for dropdown box
+	 */
+	public static function mla_get_custom_field_filter_dropdown( $selected = MLACoreOptions::ALL_MLA_FILTER_METAKEY, $dropdown_options = array() ) {
+		global $wpdb;
+
+		$dropdown = '';
+		$tax_metakey =  MLACore::mla_taxonomy_support('', 'metakey');
+		if ( empty( $tax_metakey ) ) {
+			return $dropdown;
+		}
+		
+		$tax_metakey_sort =  MLACore::mla_taxonomy_support('', 'metakey_sort');
+		$values = $wpdb->get_col( $wpdb->prepare( "
+			SELECT DISTINCT meta_value
+			FROM $wpdb->postmeta
+			WHERE meta_key = %s
+			ORDER BY meta_value
+		", $tax_metakey ) . $tax_metakey_sort );
+
+		if ( empty( $values ) ) {
+			return $dropdown;
+		}
+		
+		$dropdown  = '<select name="mla_filter_term" class="postform" id="name">' . "\n";
+		$selected_attribute = ( $selected == MLACoreOptions::ALL_MLA_FILTER_METAKEY ) ? ' selected="selected"' : '';
+		$value = __( 'All', 'media-library-assistant' ) . ' ' . $tax_metakey;
+		$dropdown .= "\t" . sprintf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( MLACoreOptions::ALL_MLA_FILTER_METAKEY ), $selected_attribute, _wp_specialchars( $value ) ) . "\n";
+		foreach ( $values as $value ) {
+			$selected_attribute = ( $selected == $value ) ? ' selected="selected"' : '';
+			$dropdown .= "\t" . sprintf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $value ), $selected_attribute, _wp_specialchars( $value ) ) . "\n";
+		}
+		$dropdown .= '</select>';
+		
+		return $dropdown;
+	}
+
+	/**
 	 * Get dropdown box of terms to filter by, if available
 	 *
 	 * @since 1.20
@@ -158,6 +202,14 @@ class MLA_List_Table extends WP_List_Table {
 	public static function mla_get_taxonomy_filter_dropdown( $selected = 0, $dropdown_options = array() ) {
 		$dropdown = '';
 		$tax_filter =  MLACore::mla_taxonomy_support('', 'filter');
+
+		if ( MLACoreOptions::MLA_FILTER_METAKEY == $tax_filter ) {
+			if ( 0 == intval( $selected ) ) {
+				$selected = MLACoreOptions::ALL_MLA_FILTER_METAKEY;
+			}
+			
+			return self::mla_get_custom_field_filter_dropdown( $selected, $dropdown_options );
+		}
 
 		if ( ( '' != $tax_filter ) && ( is_object_in_taxonomy( 'attachment', $tax_filter ) ) ) {
 			$tax_object = get_taxonomy( $tax_filter );

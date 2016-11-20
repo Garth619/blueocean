@@ -59,6 +59,25 @@
         </td>
 		</tr>
 
+<!-- template="taxonomy-metakey-row" -->
+        <tr valign="top">
+		<td colspan="5" style="text-align:right;">
+            <input type="radio" name="tax_metakey_sort" id="tax_metakey_asc" [+asc_checked+] value="ASC" /> ASC&nbsp;&nbsp;
+            <input type="radio" name="tax_metakey_sort" id="tax_metakey_asc" [+desc_checked+] value="DESC" /> DESC&nbsp;&nbsp;
+            <select name="tax_metakey" id="tax_metakey">
+[+tax_metakey_options+]
+            </select>
+            <!-- <input name="tax_metakey" id="tax_metakey" type="text" size="[+tax_metakey_size+]" value="[+tax_metakey_text+]" /> -->
+        </td>
+        </td>
+		<td style="text-align:center;">
+            <input type="radio" name="tax_filter" id="tax_filter_metakey" [+filter_checked+] value="[+key+]" />
+        </td>
+		<td>
+            &nbsp;[+name+]
+        </td>
+		</tr>
+
 <!-- template="search-table" -->
         <tr valign="top">
 		  <td>&nbsp;</td>
@@ -138,7 +157,7 @@
 		<td class="textleft" style="vertical-align:middle">
             [+name+]&nbsp;
 			<input type="hidden" name="custom_field_mapping[[+index+]][name]" id="custom_field_name_[+index+]" value="[+name_attr+]" />
-			<input type="hidden" name="custom_field_mapping[[+index+]][key]" id="custom_field_name_[+index+]" value="[+key+]" />
+			<input type="hidden" name="custom_field_mapping[[+index+]][key]" id="custom_field_key_[+index+]" value="[+key+]" />
         </td>
 		<td class="textleft">
             <select name="custom_field_mapping[[+index+]][data_source]" id="custom_field_data_source_[+index+]">

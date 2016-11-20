@@ -112,6 +112,12 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 		return;
 	}
 
+	// Toolset Views editor locks uploads to "Uploaded to this post"
+	mlaModal.settings.pagenow = typeof pagenow === 'undefined' ? 'unknown' : pagenow;
+	if ( mlaModal.settings.pagenow === 'toolset_page_views-editor' ){
+		return;
+    }
+
 	/*
 	 * Parse outgoing Ajax requests, look for the 'query-attachments' action and stuff
 	 * our arguments into the "s" field because MMMW only monitors that one field.
@@ -462,13 +468,19 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			id:        'media-attachment-term-filters',
 
 			createFilters: function() {
-				var state = this.controller._state, index,
+				var state = this.controller._state, index, filterTerm,
 					filters = {};
 
 				_.each( mlaModal.settings.termsText || {}, function( text, key ) {
+					if ( mlaModal.settings.termsCustom ) {
+						filterTerm = mlaModal.settings.termsValue[ key ];
+					} else {
+						filterTerm = parseInt( mlaModal.settings.termsValue[ key ] );
+					}
+					
 					filters[ key ] = {
 						text: text,
-						props: { s: { 'mla_filter_term': parseInt( mlaModal.settings.termsValue[ key ] ) } }
+						props: { s: { 'mla_filter_term': filterTerm } }
 					};
 				});
 
@@ -757,9 +769,10 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 		wp.media.view.AttachmentsBrowser = wp.media.view.AttachmentsBrowser.extend({
 /*	for debug : trace every event triggered in this.controller * /
 			toolbarEvent: function( eventName ) {
-				var id = this.model.attributes.id;
-				console.log('toolbarEvent this.model.attributes: ', JSON.stringify( this.model.attributes ));
-				console.log('toolbarEvent( ', id, ' ) Event: ', eventName);
+				//var id = this.model.attributes.id;
+				//console.log('toolbarEvent this.model.attributes: ', JSON.stringify( this.model.attributes ));
+				//console.log('toolbarEvent( ', id, ' ) Event: ', eventName);
+				console.log('toolbarEvent(  ) Event: ', eventName);
 			}, // */
 
 			createToolbar: function() {
@@ -772,16 +785,17 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 					mlaModal.settings.query[ state ].searchFields = _.clone( mlaModal.settings.query.initial.searchFields );
 				}
 
-/*	for debug : trace every event triggered in the this.controller * /
-this.stopListening( this.controller );
-this.listenTo( this.controller, 'all', this.toolbarEvent );
-// */
-
 				// Apply the original method to create the toolbar
 				//wp.media.view.AttachmentsBrowser.__super__.createToolbar.apply( this, arguments );
 				mlaAttachmentsBrowser.prototype.createToolbar.apply( this, arguments );
 				mlaModal.utility.mlaAttachmentsBrowser = this;
 				filters = this.options.filters;
+
+/*	for debug : trace every event triggered in the this.controller * /
+this.controller.off( null, this.toolbarEvent );
+this.controller.on( 'all', this.toolbarEvent );
+console.log( 'listening to controller events' );
+// */
 
 				// Enhanced Media Library (eml) plugin has CSS styles that require this patch
 				if ( typeof window.eml !== "undefined" ) {
@@ -854,12 +868,12 @@ this.listenTo( this.controller, 'all', this.toolbarEvent );
 			},
 
 			hideDefaultSearch: function() {
-				var defaultSearch = $( '#media-search-input', this.el );
-				
+				var defaultSearch = $( '#media-search-input', mlaModal.settings.$el );
+
 				if ( 0 === defaultSearch.length ) {
-					defaultSearch = $( 'div.media-toolbar-primary > input.search', this.el )
+					defaultSearch = $( 'div.media-toolbar-primary > input.search', mlaModal.settings.$el )
 				}
-				
+
 				defaultSearch.hide();
 			},
 
@@ -1289,7 +1303,7 @@ this.listenTo( this.controller, 'all', this.toolbarEvent );
 				//wp.media.model.Selection.__super__.initialize.apply( this, arguments );
 				mlaSelection.prototype.initialize.apply( this, arguments );
 
-/*	for debug : trace every event triggered in the wp.media.model.Selection * /
+/*	for debug : trace every event triggered in the wp.media.model.Selection  * /
 this.stopListening( this );
 this.listenTo( this, 'all', this.selectionEvent );
 // */

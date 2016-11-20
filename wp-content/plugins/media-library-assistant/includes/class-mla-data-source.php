@@ -157,7 +157,7 @@ class MLAData_Source {
 		);
 		$data_value = shortcode_atts( $default_arguments, $data_value );
 
-		return MLAData_Source::_evaluate_data_source( $post_id, $category, $data_value, $attachment_metadata = NULL );
+		return MLAData_Source::_evaluate_data_source( $post_id, $category, $data_value, $attachment_metadata );
 	} // mla_get_data_source
 
 	/**

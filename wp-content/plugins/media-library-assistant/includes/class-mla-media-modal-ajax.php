@@ -615,6 +615,7 @@ class MLAModal_Ajax {
 			'mla_filter_month', 'mla_filter_term', 'mla_terms_search',
 			'mla_search_value', 's', 'mla_search_fields', 'mla_search_connector'
 		) ) );
+//error_log( __LINE__ . ' mla_query_attachments_action query = ' . var_export( $query, true ), 0 );
 
 		$query = apply_filters( 'mla_media_modal_query_initial_terms', $query, $raw_query );
 

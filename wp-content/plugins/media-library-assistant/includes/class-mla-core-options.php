@@ -64,6 +64,21 @@ class MLACoreOptions {
 	const MLA_TAXONOMY_SUPPORT = 'taxonomy_support';
 
 	/**
+	 * Provides a unique name for the "filter on custom field" key
+	 */
+	const MLA_FILTER_METAKEY = '(custom field)';
+
+	/**
+	 * Provides a unique name for the "all custom field values" key
+	 */
+	const ALL_MLA_FILTER_METAKEY = '(all MLA_FILTER_METAKEY)';
+
+	/**
+	 * Provides a unique name for the "no custom field values" key
+	 */
+	const NO_MLA_FILTER_METAKEY = '(no MLA_FILTER_METAKEY)';
+
+	/**
 	 * Provides a unique name for the admin screen page title option
 	 */
 	const MLA_SCREEN_PAGE_TITLE = 'admin_screen_page_title';
@@ -460,7 +475,8 @@ class MLACoreOptions {
 						__( 'Check the "<strong>Checklist</strong>" box to enable the checklist-style meta box for a flat taxonomy.', 'media-library-assistant' ) . '&nbsp;' .
 						__( 'You must also check the <strong>"Enable enhanced checklist taxonomies"</strong> box below to enable this feature.', 'media-library-assistant' ) . '<br>' .
 						__( 'Check the "<strong>Checked On Top</strong>" box to moved checked terms to the top of the checklist-style meta box.', 'media-library-assistant' ) . '<br>' .
-						__( 'Use the "<strong>List Filter</strong>" option to select the taxonomy on which to filter the Assistant table listing.', 'media-library-assistant' ),
+						__( 'Use the "<strong>List Filter</strong>" option to select the taxonomy (or custom field) on which to filter the Assistant table listing.', 'media-library-assistant' ) . '<br>' .
+						__( 'To <strong>filter on a custom field</strong>, enter the field name and select ASC (Ascending) ot DESC (Descending) order.', 'media-library-assistant' ),
  					'std' =>  array (
 						'tax_support' => array (
 							'attachment_category' => 'checked',
@@ -476,7 +492,9 @@ class MLACoreOptions {
 						),
 						'tax_flat_checklist' => array(),
 						'tax_checked_on_top' => NULL, // default "true", handled in mla_initialize_tax_checked_on_top
-						'tax_filter' => 'attachment_category'
+						'tax_filter' => 'attachment_category',
+						'tax_metakey_sort' => 'ASC',
+						'tax_metakey' => '',
 						), 
 					'type' => 'custom',
 					'render' => 'mla_taxonomy_option_handler',

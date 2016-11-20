@@ -509,6 +509,8 @@ class MLAOptions {
 				$tax_flat_checklist = isset( $current_values['tax_flat_checklist'] ) ? $current_values['tax_flat_checklist'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'];
 				$tax_checked_on_top = isset( $current_values['tax_checked_on_top'] ) ? $current_values['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'];
 				$tax_filter = isset( $current_values['tax_filter'] ) ? $current_values['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
+				$tax_metakey_sort = isset( $current_values['tax_metakey_sort'] ) ? $current_values['tax_metakey_sort'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
+				$tax_metakey = isset( $current_values['tax_metakey'] ) ? $current_values['tax_metakey'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 
 				/*
 				 * Always display our own taxonomies, even if not registered.
@@ -571,6 +573,25 @@ class MLAOptions {
 					$row .= MLAData::mla_parse_template( $taxonomy_row, $option_values );
 				}
 
+				/*
+				 * Add the "filter on custom field" row
+				 */
+				$selected = empty( $tax_metakey ) ? 'none' : $tax_metakey;
+				$tax_metakey_options = MLAOptions::_compose_custom_field_option_list( $selected, array() );
+				
+				$option_values = array (
+					'key' => MLACoreOptions::MLA_FILTER_METAKEY,
+					'name' =>  '( ' . __( 'Custom Field', 'media-library-assistant' ) . ' )',
+					'asc_checked' => ( 'ASC' == $tax_metakey_sort ) ? 'checked=checked' : '',
+					'desc_checked' => ( 'DESC' == $tax_metakey_sort ) ? 'checked=checked' : '',
+					'tax_metakey_options' => $tax_metakey_options,
+					'tax_metakey_size' => '20',
+					'tax_metakey_text' => $tax_metakey,
+					'filter_checked' => ( MLACoreOptions::MLA_FILTER_METAKEY == $tax_filter ) ? 'checked=checked' : ''
+				);
+
+				$row .= MLAData::mla_parse_template( MLAOptions::$mla_option_templates['taxonomy-metakey-row'], $option_values );
+
 				$option_values = array (
 					'Support' => __( 'Support', 'media-library-assistant' ),
 					'Inline Edit' => __( 'Inline Edit', 'media-library-assistant' ),
@@ -592,10 +613,12 @@ class MLAOptions {
 				$tax_flat_checklist = isset( $args['tax_flat_checklist'] ) ? $args['tax_flat_checklist'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'];
 				$tax_checked_on_top = isset( $args['tax_checked_on_top'] ) ? $args['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'];
 				$tax_filter = isset( $args['tax_filter'] ) ? $args['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
+				$tax_metakey_sort = isset( $args['tax_metakey_sort'] ) ? $args['tax_metakey_sort'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
+				$tax_metakey = isset( $args['tax_metakey'] ) ? stripslashes( $args['tax_metakey'] ) : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 
 				$msg = '';
 
-				if ( !empty($tax_filter) && !array_key_exists( $tax_filter, $tax_support ) ) {
+				if ( !empty($tax_filter) && ! ( array_key_exists( $tax_filter, $tax_support ) || ( MLACoreOptions::MLA_FILTER_METAKEY == $tax_filter ) ) ) {
 					/* translators: 1: taxonomy name */
 					$msg .= '<br>' . sprintf( __( 'List Filter ignored; %1$s not supported.', 'media-library-assistant' ), $tax_filter ) . "\r\n";
 					$tax_filter = '';
@@ -641,7 +664,9 @@ class MLAOptions {
 					'tax_term_search' => $tax_term_search,
 					'tax_flat_checklist' => $tax_flat_checklist,
 					'tax_checked_on_top' => $tax_checked_on_top,
-					'tax_filter' => $tax_filter
+					'tax_filter' => $tax_filter,
+					'tax_metakey_sort' => $tax_metakey_sort,
+					'tax_metakey' => $tax_metakey,
 					);
 
 				MLACore::mla_update_option( $key, $value );

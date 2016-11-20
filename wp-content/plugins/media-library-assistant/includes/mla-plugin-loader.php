@@ -25,6 +25,13 @@ if ( ! defined('MLA_DEBUG_LEVEL') ) {
 	define('MLA_DEBUG_LEVEL', 0);
 }
 
+if ( ! defined('MLA_AJAX_EXCEPTIONS') ) {
+	/**
+	 * Activates full MLA load for specified AJAX actions; can be set in wp-config.php
+	 */
+	define('MLA_AJAX_EXCEPTIONS', '');
+}
+
 /**
  * Accumulates error messages from name conflict tests
  *
@@ -65,6 +72,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	 * Minimum support functions required by all other components
 	 */
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-core.php' );
+	//add_action( 'plugins_loaded', 'MLACore::mla_plugins_loaded_action_wpml', 1 );
 	add_action( 'plugins_loaded', 'MLACore::mla_plugins_loaded_action', 0x7FFFFFFF );
 	add_action( 'init', 'MLACore::initialize', 0x7FFFFFFF );
 
@@ -78,8 +86,6 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	}
 
 	if( defined('DOING_AJAX') && DOING_AJAX ) {
-//error_log( __LINE__ . ' plugin loader request = ' . var_export( $_REQUEST, true ), 0 );
-
 		/*
 		 * Ajax handlers
 		 */
@@ -90,17 +96,23 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 		 * Quick and Bulk Edit requires full support for content templates, etc.
 		 * IPTC/EXIF and Custom Field mapping require full support, too.
 		 */
+		$ajax_exceptions = array( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, 'mla-inline-mapping-iptc-exif-scripts', 'mla-inline-mapping-custom-scripts', 'mla-polylang-quick-translate', 'mla-inline-edit-upload-scripts', 'mla-inline-edit-view-scripts', 'upload-attachment' );
+
+		if ( MLA_AJAX_EXCEPTIONS ) {
+			$ajax_exceptions = array_merge( $ajax_exceptions, explode( ',', MLA_AJAX_EXCEPTIONS ) );
+		}
+
 		$ajax_only = true;
 		if ( isset( $_REQUEST['action'] ) ) {
-			if ( in_array( $_REQUEST['action'], array( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, 'mla-inline-mapping-iptc-exif-scripts', 'mla-inline-mapping-custom-scripts', 'mla-polylang-quick-translate', 'mla-inline-edit-upload-scripts', 'mla-inline-edit-view-scripts', 'upload-attachment' ) ) ) {
+			if ( in_array( $_REQUEST['action'], $ajax_exceptions ) ) {
 				$ajax_only = false;
 			}
 		}
-		
+
 		//Look for WPML flat taxonomy autocomplete
 		if ( isset( $_GET['action'] ) && ( 'ajax-tag-search' == $_GET['action'] ) ) {
 			global $sitepress;
-			
+
 			if ( is_object( $sitepress ) ) {
 				$ajax_only = false;
 			}
@@ -109,7 +121,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 		if ( $ajax_only ) {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
 			add_action( 'init', 'MLAQuery::initialize', 0x7FFFFFFF );
-			
+
 			/*
 			 * Other plugins such as "No Cache AJAX Widgets" might need shortcodes
 			 */
@@ -125,7 +137,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	 */
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
 	add_action( 'init', 'MLAQuery::initialize', 0x7FFFFFFF );
-		
+
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
 	add_action( 'init', 'MLAData::initialize', 0x7FFFFFFF );
 
@@ -186,9 +198,15 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-upload-optional-list-table.php' );
 
 	/*
-	 * Custom list table package for the Upoload MIME Type Views.
+	 * Custom list table package for the Upload MIME Type Views.
 	 * Doesn't need an initialize function; has a constructor.
 	 */
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-upload-list-table.php' );
+
+	/*
+	 * Custom list table package for the Example Plugin Views.
+	 * Doesn't need an initialize function; has a constructor.
+	 */
+	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-example-list-table.php' );
 }
 ?>

@@ -2,11 +2,11 @@
 Contributors: photocrati, imagely
 Tags: nextgen, nextgen gallery, gallery, galleries, image, images, image gallery, photo, photos, photo gallery, picture, pictures, picture gallery, album, albums, photo albums, image album, media, media gallery, thumbnails, thumbnail gallery, thumbnail galleries, slideshow, slideshows, slideshow gallery, slideshow galleries, fancybox, lightbox, responsive, responsive gallery, responsive galleries, wordpress responsive gallery, nextcellent, wordpress gallery plugin, wordpress photo gallery plugin, wp gallery, wp gallery plugins, best gallery plugin, free photo gallery, singlepic, image captions imagebrowser, watermarks, watermarking, photography, photographer
 Requires at least: 4.0.0
-Stable tag: 2.1.43
-Tested up to: 4.5.2
+Stable tag: 2.1.57
+Tested up to: 4.6.1
 License: GPLv2
 
-The most popular WordPress gallery plugin and one of the most popular plugins of all time with over 14 million downloads.
+The most popular WordPress gallery plugin and one of the most popular plugins of all time with over 15 million downloads.
 
 == Description ==
 
@@ -186,6 +186,87 @@ For more information, feel free to visit the official website for the NextGEN Ga
 
 
 == Changelog ==
+
+= V2.1.57 - 11.14.2016 =
+* Changed: Display type icons are now clickable in the Insert Gallery Window
+* Changed: Include backup image files when coping/moving a gallery
+* Changed: Show gallery name in upload notification
+* Changed: Added placeholder text to gallery name field on Add Gallery / Upload Images page
+* Fixed:   Custom sortorder not preserved in shortcode
+* Fixed:   Shortcodes added via Insert Gallery Window displayed as []
+* Fixed:   Uncaught TypeError: Cannot read property 'replace' of undefined
+* Fixed:   Use of deprecated Yoast SEO (aka WPSEO) filter
+* Fixed:   Conflict with Easy Digital Downloads
+* Fixed:   Misc invalid HTML tags in admin pages (thanks to kniebremser)
+* Fixed:   Change display:hidden to visibility:hidden in various places
+* Fixed:   Escaping of quotes in gallery titles and urls
+* Fixed:   Untranslatable strings
+
+
+= V2.1.56 - 10.27.2016 =
+* Fixed:   Shortcode parsing was affecting third-party shortcodes
+
+= V2.1.54 - 10.25.2016 =
+* NEW:     Added php docblock directives for code hinting/completion
+* NEW:     Display types can have aliases
+* NEW:     Visual Shortcodes
+* Changed: Now uses gulp for package compilation & JS/CSS minification
+* Changed: Updated Freemius SDK to 1.2.1
+* Fixed:   Extraneous backslashes being added to gallery titles & descriptions
+* Fixed:   Import folder 'gallery title' field wasn't being used for new gallery titles
+* Fixed:   Settings reset will now redirect to /wp-admin/ to avoid potential activation-related errors
+* Fixed:   Table columns cache becomes out of date between versions
+* Fixed:   Various issues with shortcodes when used in widgets
+* Fixed:   Warnings caused by calls to non-existent module package files
+* Fixed:   nextgen_admin's jquery-ui breaking Elegant Themes admin pages
+
+= V2.1.50 - 08.30.2016 =
+* NEW:     Added the ability to open galleries within albums using a lightbox
+* Changed: Increased freemius opt-in to 100%
+* Changed: Tamara Lackey's biography on the overview page
+* Fixed:   Images not responsive for all display types
+* Fixed:   Compatibility with the Imagely Lightroom plugin
+* Fixed:   Removed Pope tests folder
+* Fixed:   Maximum function nesting level fatal error when displaying two or more albums
+* Fixed:   Ensure Insert Gallery Window background stays white
+* Fixed:   PHP warning for C_NGG_Lightbox class using incompatible constructor
+
+= V2.1.49 - 07.26.2016 =
+* NEW:     Add a "Default" template option to override ATP settings when a global setting is used
+* NEW:     Added "generic" error reporting back during image upload.
+* NEW:     Added notice for deprecating PHP 5.2
+* NEW:     Option to display child gallery and album descriptions when viewing albums
+* Changed: ATP preview images are smaller with tighter margins to show more images
+* Changed: Content of Upgrade to Pro page
+* Changed: New NextGEN Overview page
+* Changed: Replicate gallery name sanitation of NG legacy for gallery paths
+* Fixed:   Resolved all found PHP warnings/notices/deprecations and strict errors
+* Fixed:   Compatibility on Windows servers with network mounted document roots
+* Fixed:   Ensure EXIF meta data is loaded from the appropriate exif_data array instead of exif_array
+* Fixed:   Gallery Settings toggle not functioning
+* Fixed:   Uploading breaking when thumbnail or image resizing fails due to lack of specific format support for image libraries
+* Fixed:   Warning generated in nggallery.php checking useMediaRSS option
+
+= V2.1.46 - 06.23.2016 =
+* Fixed:   Remove inner nextgen-gallery folder due to build issue
+
+= V2.1.45 - 06.22.2016 =
+* Fixed:   Freemius assets should not be minified
+
+= V2.1.44 - 06.22.2016 =
+* NEW:     "Add Gallery" button added next to "Add Media" button on Create/Edit Post screen
+* NEW:     IGW placeholder images are watermarked
+* NEW:     Added API for communicating with Lightroom plugin
+* NEW:     Gulp build system
+* NEW:     Added "ngg_igw_placeholder_line_2_settings" and "ngg_igw_placeholder_line_1_settings" filters
+* NEW:     Added "ngg_settings_during_image_generation" filter to adjust image generation
+* NEW:     Added "ngg_before_save_thumbnail" filter for image manipulation abilities
+* NEW:     Added the ability to apply GD filters during image generation
+* NEW:     Integrated with WordPress SEO sitemaps to show include NGG images in image counts
+* Changed: Links to manage a gallery after it's been created don't appear in the IGW
+* Fixed:   Freemius code shouldn't be minified
+* Fixed:   When a datamapper entity is saved, it's corresponding cache should be cleared
+* Fixed:   IGW placeholder images aren't used by WordPress SEO's OpenGraph analysis
 
 = V2.1.43 - 05.25.2016 =
 * NEW:     Added Freemius integration

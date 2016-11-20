@@ -1,6 +1,13 @@
 ﻿<!-- template="documentation-tab" -->
 <div class="mla-display-settings-page" id="mla-display-settings-documentation-tab" style="width:700px">
 <h3>Plugin and Shortcode Documentation. In this tab, jump to:</h3>
+<p class="submit mla-settings-submit">
+Browse and install: 
+<a href="[+example_url+]" class="button button-primary">Example Plugins</a><br>
+&nbsp;<br />
+For more information about the example plugins, jump to <a href="#mla_example_plugins">The Example Plugins</a><br>
+&nbsp;
+</p>
 <div id="mla-doc-gallery-shortcode"><a href="#mla_gallery"><strong>MLA Gallery Shortcode</strong></a>
 <ul class="mla-doc-toc-list">
 <li><a href="#documentation_sources">Option/Parameter Documentation Sources</a></li>
@@ -64,7 +71,7 @@
 </ul></div>
 <ul style="list-style-position:inside; list-style:disc; line-height: 18px; clear:both">
 <li>
-<a href="#gallery_examples">MLA Gallery Examples</a>
+<a href="#gallery_examples"><strong>MLA Gallery Examples</strong></a>
 </li>
 <ul class="mla-doc-toc-list">
 <li><a href="#simple_examples">Simple Examples</a></li>
@@ -166,6 +173,7 @@
 <li><a href="#mla_mapping_hooks"><strong>MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)</strong></a></li>
 <li><a href="#mla_debug_tab"><strong>MLA Debug Tab</strong></a></li>
 <li><a href="#mla_language_tab"><strong>WPML &amp; Polylang Multilingual Support; the MLA Language Tab</strong></a></li>
+<li><a href="#mla_example_plugins"><strong>The Example Plugins</strong></a></li>
 </ul>
 <h3>Translating/Localizing the plugin</h3>
 <p>
@@ -596,6 +604,10 @@ The Link parameter specifies the target and type of link from the gallery item t
 <td>Link directly to the attachment file.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">download</td>
+<td>Link to the MLA file downloader for this attachment. Forces a file download instead of opening the file in the browser.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large</td>
 <td>For image attachments, the size of the image file you want to link to.</td>
 </tr>
@@ -798,15 +810,19 @@ Searching for keywords within the names of taxonomy terms is a completely differ
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_phrase_delimiter</td>
-<td>A single character that separates the terms in <code>mla_terms_phrases</code>. The <strong>default delimiter</strong> is a comma (',') since term names can contain spaces.</td>
+<td>A single character that separates the phrasesd within a term in <code>mla_terms_phrases</code>. The <strong>default delimiter</strong> is a space (' ').</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_phrase_connector</td>
-<td>Choose from OR to require that any one of the phrases must match for the search to succeed, or <strong>AND (the default)</strong> to require that all of the phrases must match.</td>
+<td>If you enter multiple phrases (separated by the <code>mla_phrase_delimiter</code>) in the <code>mla_terms_phrases</code> parameter, this parameter controls how they are connected. Choose from OR to require that any one of the phrases must match for the search to succeed, or <strong>AND (the default)</strong> to require that all of the phrases must match.</td>
 </tr>
 <tr>
+<tr>
+<td class="mla-doc-table-label">mla_term_delimiter</td>
+<td>A single character that separates the terms in <code>mla_terms_phrases</code>. The <strong>default delimiter</strong> is a comma (',') since term names can contain spaces.</td>
+</tr>
 <td class="mla-doc-table-label">mla_term_connector</td>
-<td>If you enter multiple terms (separated by the <code>mla_phrase_delimiter</code>) in the <code>mla_terms_phrases</code> parameter, this parameter controls how they are connected. Choose from <strong>OR (the default)</strong> to require that any one of the terms must match for the search to succeed, or AND to require that all of the terms must match.</td>
+<td>If you enter multiple terms (separated by the <code>mla_term_delimiter</code>) in the <code>mla_terms_phrases</code> parameter, this parameter controls how they are connected. Choose from <strong>OR (the default)</strong> to require that any one of the terms must match for the search to succeed, or AND to require that all of the terms must match.</td>
 </tr>
 </table>
 <p>
@@ -1026,11 +1042,12 @@ If you code <code>mla_debug=log</code> all of the information will be written to
 </p>
 <h4>MLA Gallery Filters and Actions (Hooks)</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Hooks Example source code" href="[+examples_url+]mla-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-hooks-example.php.txt</a>. To run the example:
+The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Gallery+Hooks+Example%22" class="mla-doc-bold-link">MLA Gallery Hooks Example</a>. To run the example:
 <ol>
-<li>Edit the code to, for example, uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
-<li>Remove the ".txt" extension and save the "mla-hooks-example.php" file in your plugins directory.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Gallery Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA Gallery Hooks Example" plugin.</li>
+<li>Edit the code to, for example, uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
 <li>Create a new <code>[mla_gallery]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="all custom"</code> parameter to activate the example output.</li>
 <li>View the post or page on which the modified shortcode appears to see a list of each item's custom fields appended to the gallery captions.</li>
 </ol>
@@ -1125,16 +1142,28 @@ Many of the <code>[mla_tag_cloud]</code> concepts and shortcode parameters are m
 </p>
 <h4>Tag Cloud Output Formats</h4>
 <p>
-The traditional tag cloud output is a "heat map" of term names where larger names are associated with more attachments than smaller names. The terms' display format is determined by the "mla_output" parameter:
+The traditional tag cloud output is a "heat map" of term names where larger names are associated with more attachments than smaller names. The terms' display format is determined by the <strong>"mla_output"</strong> parameter:
 </p>
 <table>
 <tr>
 <td class="mla-doc-table-label">flat</td>
-<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink. This is the default value.</td>
+<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink. <strong>"flat" is the default output format value.</strong></td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">list</td>
-<td>Returns hyperlinks enclosed by one of the HTML list tags; unordered (&lt;ul&gt;&lt;/ul&gt;), ordered (&lt;ol&gt;&lt;/ol&gt;) or definitions (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup.</td>
+<td>Returns hyperlinks enclosed by one of the HTML list tags; unordered (<strong>&lt;ul&gt;&lt;/ul&gt;, the default tag value</strong>) or definitions (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup. If the "captiontag" parameter is present the list tag will be definitions (&lt;dl&gt;&lt;/dl&gt;).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ulist</td>
+<td>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">olist</td>
+<td>Returns hyperlinks enclosed by HTML ordered list tags (&lt;ol&gt;&lt;/ol&gt;). The "itemtag" and "termtag" parameters customize the list markup.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">dlist</td>
+<td>Returns hyperlinks enclosed by HTML definition list tags (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">grid</td>
@@ -1146,7 +1175,7 @@ The traditional tag cloud output is a "heat map" of term names where larger name
 </tr>
 </table>
 <p>
-The "list" and "grid" formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. The <code>[mla_tag_cloud]</code> shortcode also supports pagination with "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links" formats. These are essentially the same as those for the <code>[mla_gallery]</code> shortcode.
+The list and grid formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>. The <code>[mla_tag_cloud]</code> shortcode also supports pagination with "previous_link", "current_link", "next_link", "previous_page", "next_page" and "paginate_links" formats. These are essentially the same as those for the <code>[mla_gallery]</code> shortcode.
 <a name="tag_cloud_items"></a>
 </p>
 <h4>Tag Cloud Item Parameters</h4>
@@ -1942,10 +1971,10 @@ The "smallest=12" and "largest=12" parameters make "font-size" the same for all 
 </p>
 <h4>MLA Tag Cloud Filters (Hooks)</h4>
 <p>
-The <code>[mla_tag_cloud]</code> shortcode supports a comprehensive set of filters that give you complete control over cloud composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Tag Cloud Hooks Example source code" href="[+examples_url+]mla-cloud-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-cloud-hooks-example.php.txt</a>. To run the example:
+The <code>[mla_tag_cloud]</code> shortcode supports a comprehensive set of filters that give you complete control over cloud composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Tag+Cloud+Hooks+Example%22" class="mla-doc-bold-link">MLA Tag Cloud Hooks Example</a>. To run the example:
 <ol>
-<li>Edit the code to, for example, uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
-<li>Remove the ".txt" extension and save the "mla-cloud-hooks-example.php" file in your plugins directory. You can give the plugin and its file any (unique) name you like.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Tag Cloud Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA Tag Cloud Hooks Example" plugin.</li>
 <li>Create a new <code>[mla_tag_cloud]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color cloud"</code> parameter to activate the example output.</li>
 <li>View the post or page on which the modified shortcode appears to see a tag cloud with a range of colors applied to the terms.</li>
@@ -2036,15 +2065,19 @@ Many of the <code>[mla_term_list]</code> concepts and shortcode parameters are m
 </p>
 <h4>Term List Output Formats</h4>
 <p>
-The default term list output is an unordered list of term names surrounded by hyperlinks. The terms' display format is determined by the "mla_output" parameter:
+The default term list output is an unordered list of term names surrounded by hyperlinks. The terms' display format is determined by the <strong>"mla_output"</strong> parameter:
 </p>
 <table>
 <tr>
 <td class="mla-doc-table-label">flat</td>
-<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink. This is the default value.</td>
+<td>Returns a sequence of hyperlink tags without further HTML markup. The "separator" parameter content (default, one newline character) is inserted between each hyperlink.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">list, ulist</td>
+<td class="mla-doc-table-label">list</td>
+<td>Returns hyperlinks enclosed by one of the HTML list tags; unordered (<strong>&lt;ul&gt;&lt;/ul&gt;, the default tag value</strong>) or definitions (&lt;dl&gt;&lt;/dl&gt;), which allow for each term to have a "caption". The "itemtag", "termtag" and "captiontag" parameters customize the list markup. If the "captiontag" parameter is present the list tag will be definitions (&lt;dl&gt;&lt;/dl&gt;).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ulist</td>
 <td>Returns hyperlinks enclosed by HTML unordered list tags (&lt;ul&gt;&lt;/ul&gt;). The "itemtag" and "termtag" parameters customize the list markup. <strong>"ulist" is the default output format value.</strong></td>
 </tr>
 <tr>
@@ -2069,7 +2102,7 @@ The default term list output is an unordered list of term names surrounded by hy
 </tr>
 </table>
 <p>
-The "list", "dropdown" and "checklist" formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>.
+The list, dropdown and checklist formats can be extensively customized by using custom <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>.
 <a name="term_list_output_structure"></a>
 </p>
 <h4>Term List Output Structure</h4>
@@ -2781,10 +2814,10 @@ Term list <strong>item-specific substitution parameters</strong> for the Markup 
 </p>
 <h4>MLA Term List Filters (Hooks)</h4>
 <p>
-The <code>[mla_term_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Term List Hooks Example source code" href="[+examples_url+]mla-term-list-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-term-list-hooks-example.php.txt</a>. To run the example:
+The <code>[mla_term_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Term List Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Term+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Term List Hooks Example</a>. To run the example:
 <ol>
-<li>Edit the code to, for example, uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
-<li>Remove the ".txt" extension and save the "mla-cloud-hooks-example.php" file in your plugins directory. You can give the plugin and its file any (unique) name you like.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Term List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA Term List Hooks Example" plugin.</li>
 <li>Create a new <code>[mla_term_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output.</li>
 <li>View the post or page on which the modified shortcode appears to see a term list with a range of colors applied to the terms.</li>
@@ -3446,12 +3479,20 @@ Gallery-specific substitution parameters are known at the beginning of shortcode
 <td>the <code>post_modified</code> value of the post/page in which the gallery appears</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">page_parent</td>
+<td>the <code>post_parent</code> value of the post/page in which the gallery appears</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">page_guid</td>
 <td>the <code>post_guid</code> value of the post/page in which the gallery appears</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">page_type</td>
 <td>the <code>post_type</code> value of the post/page in which the gallery appears</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_mime_type</td>
+<td>the <code>post_mime_type</code> value of the post/page in which the gallery appears</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">page_url</td>
@@ -3505,6 +3546,18 @@ All of the <a href="#gallery_specific">gallery-specific substitution parameters<
 <tr>
 <td class="mla-doc-table-label">size_class</td>
 <td>shortcode 'size' parameter, default = 'thumbnail'</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">found_rows</td>
+<td>the total number of items in the gallery before considering pagination parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_rows</td>
+<td>the number of items in the current page of the gallery, considering any pagination parameters</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">max_num_pages</td>
+<td>the number of pages in the gallery</td>
 </tr>
 </table>
 <a name="mla_markup_parameters"></a>
@@ -3655,6 +3708,10 @@ The item-level substitution parameter names are:
 <td>always contains a hyperlink to the attachment file</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">downloadlink</td>
+<td>always contains a hyperlink to the MLA file downloader for this attachment</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">link_url</td>
 <td>the URL portion of <em>link</em></td>
 </tr>
@@ -3665,6 +3722,10 @@ The item-level substitution parameter names are:
 <tr>
 <td class="mla-doc-table-label">filelink_url</td>
 <td>the URL portion of <em>filelink</em></td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">downloadlink_url</td>
+<td>the URL portion of <em>downloadlink</em></td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">thumbnail_content</td>
@@ -3986,6 +4047,10 @@ Eight "format" values help you reformat fields or encode them for use in HTML at
 <tr>
 <td class="mla-doc-table-label" style="white-space:nowrap">,substr(s,l)</td>
 <td>If you need to limit the length of a value or extract a portion of it the ",substr" option will return part of the value. This option accepts one or two parameters, "start" (s) and "length" (l). The first character in the value is at position zero (0) so, for example, ",substr(2,3)" would return "cde" from a value of "abcdef". You can find complete information on "start" and "length", including the effect of negative values, at: <a href="http://php.net/manual/en/function.substr.php" title="PHP substr parameters" target="_blank">http://php.net/manual/en/function.substr.php</a>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="white-space:nowrap">,kbmb(t,k,m)</td>
+<td>Some data values, e.g., file size, are better expressed in kilobytes and megabytes. The "kbmb" format provides this conversion. There are three optional arguments; "t" (threshold), "k" (kilobyte suffix) and "m" (megabyte suffix). The threshold argument (default 10240; ten kilobytes) sets the dividing amount between bytes and kilobytes. For example, a value of 1536 bytes would display as "1,536", not "1.50 KB" and 15360 bytes would display as "15.5 KB". The "k" and "m" arguments replace the default " KB" and/or " MB" suffix displayed following the numeric value.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label" style="white-space:nowrap">,fraction(f,s)</td>
@@ -4776,13 +4841,10 @@ MLA adds five fields of its own to the metadata information:
 </p>
 <h4>Field-level substitution parameter filters (Hooks)</h4>
 <p>
-Field-level substitution parameters can be extended to include any data values your application requires. They are supported by a set of filters that enables PHP code in your theme or in another plugin to create data values and make them available to MLA.
-</p>
-<p>
-An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Field-level substitution parameter Hooks Example source code" href="[+examples_url+]mla-substitution-parameter-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-substitution-parameter-hooks-example.php.txt</a>. To run the example:
-</p>
+Field-level substitution parameters can be extended to include any data values your application requires. They are supported by a set of filters that enables PHP code in your theme or in another plugin to create data values and make them available to MLA. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Substitution Parameter Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Substitution+Parameter+Hooks+Example%22" class="mla-doc-bold-link">MLA Substitution Parameter Hooks Example</a>. To run the example:
 <ol>
-<li>Remove the ".txt" extension and save the "mla-substitution-parameter-hooks-example.php" file in your plugins directory. You can give the plugin and its file any (unique) name you like.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Substitution Parameter Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA Substitution Parameter Hooks Example" plugin.</li>
 <li>Create a new `[mla_gallery]` shortcode, markup template or mapping rule that uses terms from an item's parent post/page.</li>
 <li>Run the shortcode or mapping rule to see the plugin's data put to use.</li>
@@ -4915,6 +4977,9 @@ The first example would match each word separately. The second would match "man"
 </p>
 <p>
 Quote marks have another effect on the search; they restrict the match to a word boundary. For example, if you enter 'man' without enclosing quotes it will match "man" or "woman", because "<strong>man</strong>" appears as a part of "wo<strong>man</strong>". If you add quotes, i.e., ' "man" ', it will match "man" or "big man" but it will not match the "man" portion of "woman".
+<p>
+In the unlikely event you need to match single or double quotes inside a phrase you can enter them as an escape sequence. Use <code>\47</code> for a single quote<code>\42</code> for a double quote. 
+</p>
 </p>
 <h4>Connecting multiple phrases</h4>
 The search is further defined by the connector used between multiple phrases:
@@ -5029,10 +5094,10 @@ When you have completed your configuration changes, click "Update Media Library 
 </p>
 <h3>Media/Assistant Submenu Actions and Filters (Hooks)</h3>
 <p>
-The Media/Assistant submenu supports a comprehensive set of filters and actions that give you control over table columns, inline actions and bulk actions from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Media/Assistant Submenu Example source code" href="[+examples_url+]mla-list-table-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-list-table-hooks-example.php.txt</a>. To run the example:
+The Media/Assistant submenu supports a comprehensive set of filters and actions that give you control over table columns, inline actions and bulk actions from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the List Table Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+List+Table+Hooks+Example%22" class="mla-doc-bold-link">MLA List Table Hooks Example</a>. To run the example:
 <ol>
-<li>Edit the code to uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
-<li>Remove the ".txt" extension and save the "mla-list-table-hooks-example.php" file in your plugins directory.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA List Table Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA List Table Hooks Example" plugin.</li>
 <li>Go to the Media/Assistant submenu to exercise the filters and write filter/action information to the site's Error Log.</li>
 <li>Examine the Error Log to see the filter/action information.</li>
@@ -5279,13 +5344,10 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 </p>
 <h3>Media Manager Enhancement filters (Hooks)</h3>
 <p>
-Media Library Assistant adds several controls to the toolbar in the Media Manager Modal Window; more MIME type filters, year/month filter, taxonomy term filter and an enhanced Search media box. These features are supported by a comprehensive set of filters and actions that give you control over MMMW content from PHP code in your theme or in another plugin.
-</p>
-<p>
-An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Meta Box Hooks Example source code" href="[+examples_url+]mla-media-modal-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-media-modal-hooks-example.php.txt</a>. To run the example:
-</p>
+Media Library Assistant adds several controls to the toolbar in the Media Manager Modal Window; more MIME type filters, year/month filter, taxonomy term filter and an enhanced Search media box. These features are supported by a comprehensive set of filters and actions that give you control over MMMW content from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Media Modal Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Media+Modal+Hooks+Example%22" class="mla-doc-bold-link">MLA Media Modal Hooks Example</a>. To run the example:
 <ol>
-<li>Remove the ".txt" extension and save the "mla-media-modal-hooks-example.php" file in your plugins directory. You can give the plugin and its file any (unique) name you like.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Media Modal Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA Media Modal Hooks Example" plugin.</li>
 <li>Make any changes or additions you want to in the example plugin source code. For example, you can uncomment the <code>$initial_values</code> assignments and setting a new initial value for one or more controls.</li>
 <li>Click the "Add Media" button for a post or page to see the effect of your changes.</li>
@@ -5376,10 +5438,10 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-data-query
 Media Library Assistant adds support for the "Custom Fields" meta box to the Media/Edit Media screen. MLA also adds several meta boxes to this screen with more information about the item and where it is  used on your site. You can enable/disable the additional meta boxes with an option on the Settings/Media Library Assistant General tab.
 </p>
 <p>
-You can also make individual changes in which meta boxes are displayed and in their content by using one or more of the filters MLA provides. An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Meta Box Hooks Example source code" href="[+examples_url+]mla-metabox-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-metabox-example.php.txt</a>. To run the example:
+You can also make individual changes in which meta boxes are displayed and in their content by using one or more of the filters MLA provides. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Meta Box Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Meta+Box+Hooks+Example%22" class="mla-doc-bold-link">MLA Meta Box Hooks Example</a>. To run the example:
 <ol>
-<li>Edit the code to, for example, uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
-<li>Remove the ".txt" extension and save the "mla-metabox-example.php" file in your plugins directory. You can give the plugin and its file any (unique) name you like.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Meta Box Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA Meta Box Hooks Example" plugin.</li>
 <li>Make any changes or additions you want to in the example plugin source code. For example, you can modify the <code>mla_inserted_in_metabox</code> example to display a simplified version of the "Inserted in" information.</li>
 <li>View the Media/Edit Media screen for an item to see the effect of your changes.</li>
@@ -5580,6 +5642,15 @@ This is a powerful tool, but it comes at the price of additional database storag
 </ul>
 <p>
 If you just want to add a custom field to the Media/Assistant submenu, the quick edit area and/or the bulk edit area you can bypass the mapping logic by leaving the Data Source value as "-- None (select a value) --".
+</p>
+<p>
+Two options control the custom field mapping when new items are added to the Media Library ("Enable custom field mapping when adding new media") or when attachment metadata is updated ("Enable custom field mapping when updating media metadata"). Check one or both options to enable these features. Some plugins support file uploads from the WordPress "front end", usually by using the WordPress "Ajax" support. To enable mapping when these plugins are used you must add an entry to your <code>wp-config.php</code> file so MLA will load the mapping code:
+</p>
+<ul class="mla_settings">
+<li><code>define( 'MLA_AJAX_EXCEPTIONS', 'wfu_ajax_action,upload_ugc' );</code></li>
+</ul>
+<p>
+The above example adds the "action" values for two popular file upload plugins, <a href="https://wordpress.org/plugins/wp-file-upload/" title="WordPress File Upload plugin page" target="_blank">WordPress File Upload</a> and <a href="https://wordpress.org/plugins/frontend-uploader/" title="Frontend Uploader plugin page" target="_blank">Frontend Uploader</a> respectively. Once the entry is added MLA will run the mapping rules when it detects file upload operations from the other plugin(s).
 <a name="custom_field_mapping_example"></a>
 </p>
 <p>
@@ -5924,7 +5995,16 @@ You can define the rules for mapping metadata on the "IPTC/EXIF" tab of the Sett
 <p>If you click any of the three "Map All Attachments, ... Now" buttons, the rules currently displayed in that category will be immediately applied to <strong>all</strong> of the attachments in your site. Rule changes are <strong>not</strong> saved when you click any of these buttons. THERE<strong> IS NO UNDO FOR THESE ACTIONS!</strong></p>
 <p>
 If you just want to add a custom field to the Media/Assistant submenu, the quick edit area and/or the bulk edit area go to the "Custom Fields" tab and follow the instructions there.
-<a name="iptc_exif_mapping_example"></a>
+</p>
+<p>
+Two options control the metadata mapping when new items are added to the Media Library ("Enable IPTC/EXIF Mapping when adding new media") or when attachment metadata is updated ("Enable IPTC/EXIF Mapping when updating media metadata"). Check one or both options to enable these features. Some plugins support file uploads from the WordPress "front end", usually by using the WordPress "Ajax" support. To enable mapping when these plugins are used you must add an entry to your <code>wp-config.php</code> file so MLA will load the mapping code:
+</p>
+<ul class="mla_settings">
+<li><code>define( 'MLA_AJAX_EXCEPTIONS', 'wfu_ajax_action,upload_ugc' );</code></li>
+</ul>
+<p>
+The above example adds the "action" values for two popular file upload plugins, <a href="https://wordpress.org/plugins/wp-file-upload/" title="WordPress File Upload plugin page" target="_blank">WordPress File Upload</a> and <a href="https://wordpress.org/plugins/frontend-uploader/" title="Frontend Uploader plugin page" target="_blank">Frontend Uploader</a> respectively. Once the entry is added MLA will run the mapping rules when it detects file upload operations from the other plugin(s).
+<a name="iptc_exif_mapping_example"></a>&nbsp;
 </p>
 <p>
 <a href="#backtotop">Go to Top</a>
@@ -6250,10 +6330,10 @@ The priority order for mapping the post_content value from non-blank IPTC/EXIF m
 </p>
 <h3>MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)</h3>
 <p>
-The Custom Field and IPTC/EXIF Mapping tools support a comprehensive set of filters and actions that give you complete control over rule execution and value creation from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found here: <a title="View the Mapping Hooks Example source code" href="[+examples_url+]mla-mapping-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-mapping-hooks-example.php.txt</a>. To run the example:
+The Custom Field and IPTC/EXIF Mapping tools support a comprehensive set of filters and actions that give you complete control over rule execution and value creation from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Mapping Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Mapping Hooks Example</a>. To run the example:
 <ol>
-<li>Edit the code to uncomment the <code>error_log()</code> calls so you can see what is passed to the hooks you are interested in.</li>
-<li>Remove the ".txt" extension and save the "mla-mapping-hooks-example.php" file in your plugins directory.</li>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Mapping Hooks Example" in the Name column, then click the "Install" rollover action.</li>
 <li>Go to the Plugins/Installed Plugins screen and activate the "MLA Mapping Hooks Example" plugin.</li>
 <li>Upload a new attachment and/or run the mapping rules to exercise the filters and write mapping information to the site's Error Log.</li>
 <li>Examine the Error Log to see the mapping information.</li>
@@ -6307,7 +6387,7 @@ The current mapping hooks are:
 </tr>
 </table>
 <p>
-A second example plugin, <a title="View the Mapping Hooks Example source code" href="[+examples_url+]mla-metadata-mapping-hooks-example.php.txt" target="_blank" class="mla-doc-bold-link">mla-metadata-mapping-hooks-example.php.txt</a>, illustrates the metadata hooks. The current insert attachment/update attachment metadata hooks are:
+A second example plugin, <a title="Find the Metadata Mapping Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Metadata+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Metadata Mapping Hooks Example</a>, illustrates the metadata hooks. The current insert attachment/update attachment metadata hooks are:
 </p>
 <table>
 <tr>
@@ -6414,6 +6494,10 @@ Once that line is added to the <code>wp-config.php</code> file the "Debug" tab w
 <td class="mla-doc-table-label">4, or 0x0004</td>
 <td>writes MLA-specific messages to the log for calls to the WPML/Polylang support functions.</td>
 </tr>
+<tr>
+<td class="mla-doc-table-label">8, or 0x0008</td>
+<td>writes MLA-specific messages to the log for thumbnail generation functions supporting the <code>[mla_gallery mla_viewer=...]</code> parameter.</td>
+</tr>
 </table>
 <p>
 You can pick the logging categories you want by adding the above values together. For example, to log only PHP messages you can use <code>define( 'MLA_DEBUG_LEVEL', 1 );</code> or <code>define( 'MLA_DEBUG_LEVEL', 0x0001 );</code>. To add the "Ajax" messages you can use <code>define( 'MLA_DEBUG_LEVEL', 3 );</code> or <code>define( 'MLA_DEBUG_LEVEL', 0x0003 );</code>. The hexadecimal notation ( 0x0003 ) can be easier to understand when several options are involved.
@@ -6460,6 +6544,7 @@ Below the Debug Settings section is a text area with the current content of the 
 <p>
 If you are having an MLA problem that includes error messages in the log, copying the messages and adding them to your Support Forum topic can be most helpful; thanks!
 <a name="mla_language_tab"></a>&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -6610,6 +6695,33 @@ When rules are defined in the IPTC/EXIF "Taxonomy term mapping section" they ext
 </ul>
 <p>
 If you use Replication to automatically create terms in non-current languages they will be created with the same text value as the source term in the current language. You can always go to the taxonomy edit page and change the source text to an appropriate value for the other language(s). If you do not use Replication you can always go to the taxonomy edit page and add translations with an appropriate value for the other language(s).
+<a name="mla_example_plugins"></a>&nbsp;
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>The Example Plugins</h3>
+<p>
+The MLA example plugins have been developed to illustrate practical applications that use the hooks MLA provides to enhance the admin-mode screens and front-end content produced by the MLA shortcodes. Most of the examples are drawn from topics in the <a href="https://wordpress.org/support/plugin/media-library-assistant" title="The MLA Support Forum" target="_blank">MLA Support Forum</a>.</p>
+<p>The Documentation/Example Plugins submenu lets you browse the list of MLA example plugins, install or update them in the Plugins/Installed Plugins area and see which examples you have already installed. <strong>To activate, deactivate or delete</strong> the plugins you must go to the Plugins/Installed Plugins admin submenu.</p>
+<p>
+The Example plugins submenu lists all of the MLA example plugins and identifies those already in the Installed Plugins area. In the submenu:
+<ul class="mla_settings">
+<li>the "Screen Options" dropdown area lets you choose which columns to display and how many items appear on each page</li>
+<li>the "Help" dropdown area gives you a brief explanation of the submenu content and functions</li>
+<li>the "Search Plugins" text box lets you filter the display to items containing one or more keywords or phrases</li>
+<li>bulk and rollover actions are provided to install or update example plugins</li>
+<li>the table can be sorted by any of the displayed columns</li>
+</ul>
+</p>
+<p>
+Once you have installed an example plugin you can use the WordPress Plugins/Editor submenu to view the source code and (with extreme caution) make small changes to the code. <strong>Be very careful if you choose to modify the code!</strong> Making changes to active plugins is not recommended. If your changes cause a fatal error, the plugin will be automatically deactivated. It is much safer to download the file(s) or use FTP access to your site to modify the code offline in a more robust HTML/PHP editor.
+</p>
+<p>
+You can use the "Download" rollover action to download a plugin to your local system. Once you have made your modifications you can copy the plugin to a compressed file (ZIP archive) and then upload it to your server with the Plugins/Add New (Upload Plugin) admin submenu.
+</p>
+<p>
+If you do make changes to the example plugin code the best practice is to save the modified file(s) under a different name, so your changes won't be lost in a future update. If you want to retain the file name, consider changing the version number, e.g. adding 100 to the MLA value, so you can more easily identify the plugins you have modified.
 </p>
 <p>
 <a href="#backtotop">Go to Top</a>

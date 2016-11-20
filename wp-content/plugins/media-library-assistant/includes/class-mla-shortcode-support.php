@@ -58,7 +58,7 @@ class MLAShortcode_Support {
 
 		MLACore::mla_debug_add( "MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) explicit_path = " . var_export( $explicit_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		MLACore::mla_debug_add( "MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) ghostscript_present = " . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		
+
 		if ( ! $ghostscript_only ) {
 			if ( isset( $ghostscript_present ) ) {
 				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, ghostscript_present = ' . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
@@ -190,7 +190,7 @@ class MLAShortcode_Support {
 				if ( ( false !== $break_tag ) && ( ($break_tag + 3) == strlen( $value ) ) ) {
 					$value = substr( $value, 0, ( strlen( $value ) - 3) );
 				}
-	
+
 				if ( is_numeric( $key ) ) {
 					if ( '/>' !== $value ) {
 						$new_attr .= $value . ' ';
@@ -200,9 +200,9 @@ class MLAShortcode_Support {
 					$new_attr .= $key . '=' . $delimiter . $value . $delimiter . ' ';
 				}
 			}
-			
+
 			$attr = shortcode_parse_atts( $new_attr );
-			
+
 			/*
 			 * Remove empty values and still-invalid parameters
 			 */
@@ -211,13 +211,13 @@ class MLAShortcode_Support {
 				if ( is_numeric( $key ) || empty( $value ) ) {
 					continue;
 				}
-				
+
 				$new_attr[ $key ] = $value;
 			}
-			
+
 			$attr = $new_attr;
 		} // not_valid
-		
+
 		/*
 		 * Look for parameters in an enclosing shortcode
 		 */
@@ -226,7 +226,7 @@ class MLAShortcode_Support {
 			$new_attr = shortcode_parse_atts( $content );
 			$attr = array_merge( $attr, $new_attr );
 		}
-		
+
 		return $attr;
 	}
 
@@ -306,7 +306,7 @@ class MLAShortcode_Support {
 				$attr[ $mla_page_parameter ] = $_REQUEST[ $mla_page_parameter ];
 			}
 		}
-		
+
 		/*
 		 * These are the parameters for gallery display
 		 */
@@ -374,7 +374,7 @@ class MLAShortcode_Support {
 			'icontag' => $html5 ? 'div' : 'dt',
 			'captiontag' => $html5 ? 'figcaption' : 'dd',
 			'columns' => MLACore::mla_get_option('mla_gallery_columns'),
-			'link' => 'permalink', // or 'post' or file' or a registered size
+			'link' => 'permalink', // or 'post', 'file', a registered size, etc.
 			// Photonic-specific
 			'id' => NULL,
 			'style' => NULL,
@@ -415,8 +415,10 @@ class MLAShortcode_Support {
 			'page_status' => $post->post_status,
 			'page_name' => $post->post_name,
 			'page_modified' => $post->post_modified,
+			'page_parent' => $post->post_parent,
 			'page_guid' => $post->guid,
 			'page_type' => $post->post_type,
+			'page_mime_type' => $post->post_mime_type,
 			'page_url' => get_page_link(),
 		);
 
@@ -428,7 +430,7 @@ class MLAShortcode_Support {
 		if ( !empty( $arguments ) ) {
 			$attr = wp_parse_args( $attr, self::_validate_attributes( array(), $arguments ) );
 		}
-		
+
 		/*
 		 * Look for page-level, 'request:' and 'query:' substitution parameters,
 		 * which can be added to any input parameter
@@ -455,7 +457,7 @@ class MLAShortcode_Support {
 		$content = apply_filters( 'mla_gallery_initial_content', $content, $attr );
 		$arguments = shortcode_atts( $default_arguments, $attr );
 		$arguments = apply_filters( 'mla_gallery_arguments', $arguments );
-		
+
 		/*
 		 * Look for "no effect" alternate gallery shortcode to support plugins such as Justified Image Grid
 		 */
@@ -480,19 +482,41 @@ class MLAShortcode_Support {
 		 * Determine output type
 		 */
 		$output_parameters = array_map( 'strtolower', array_map( 'trim', explode( ',', $arguments['mla_output'] ) ) );
+		if ( ! in_array( $output_parameters[0], array( 'gallery', 'next_link', 'current_link', 'previous_link', 'next_page', 'previous_page', 'paginate_links' ) ) ) {
+			$output_parameters[0] = 'gallery';
+		}
+
 		$is_gallery = 'gallery' == $output_parameters[0];
 		$is_pagination = in_array( $output_parameters[0], array( 'previous_page', 'next_page', 'paginate_links' ) ); 
 
 		if ( $is_pagination && ( NULL !== $arguments['mla_paginate_rows'] ) ) {
 			$attachments['found_rows'] = absint( $arguments['mla_paginate_rows'] );
 		} else {
-			$attachments = self::mla_get_shortcode_attachments( $post->ID, $attr, $is_pagination );
+			$attachments = self::mla_get_shortcode_attachments( $post->ID, $attr, true ); // $is_pagination );
 		}
 
 		if ( is_string( $attachments ) ) {
 			return $attachments;
 		}
 
+		$current_rows = count( $attachments );
+
+		if ( isset( $attachments['found_rows'] ) ) {
+			$found_rows = $attachments['found_rows'];
+			unset( $attachments['found_rows'] );
+			$current_rows--;
+		} else {
+			$found_rows = $current_rows;
+		}
+		
+		if ( isset( $attachments['max_num_pages'] ) ) {
+			$max_num_pages = $attachments['max_num_pages'];
+			unset( $attachments['max_num_pages'] );
+			$current_rows--;
+		} else {
+			$max_num_pages = 1;
+		}
+		
 		if ( empty($attachments) ) {
 			if ( self::$mla_debug ) {
 				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty gallery', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $attr, true ) );
@@ -537,20 +561,20 @@ class MLAShortcode_Support {
 			 */
 			$mla_alt_ids_value = is_null( $arguments['mla_alt_ids_value'] ) ? NULL : str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments['mla_alt_ids_value'] ) );
 			$mla_alt_shortcode_ids = array();
-			
+
 			if ( is_null( $mla_alt_ids_value ) ) {
 				foreach ( $attachments as $value ) {
 					$mla_alt_shortcode_ids[] = $value->ID;
 				} // foreach $attachments
-	
+
 				$mla_alt_shortcode_ids = $arguments['mla_alt_ids_name'] . '="' . implode( ',', $mla_alt_shortcode_ids ) . '"';
-	
+
 				if ( self::$mla_debug ) {
 					$output = MLACore::mla_debug_flush();
 				} else {
 					$output = '';
 				}
-	
+
 				/*
 				 * Execute the alternate gallery shortcode with the new parameters
 				 */
@@ -700,7 +724,10 @@ class MLAShortcode_Support {
 			'itemwidth' => $width_string,
 			'margin' => $margin_string,
 			'float' => $float,
-			'size_class' => sanitize_html_class( $size_class )
+			'size_class' => sanitize_html_class( $size_class ),
+			'found_rows' => $found_rows,
+			'current_rows' => $current_rows,
+			'max_num_pages' => $max_num_pages,
 		) );
 
 		$style_template = $gallery_style = '';
@@ -823,7 +850,7 @@ class MLAShortcode_Support {
 		 */
 		$markup_values = apply_filters( 'mla_gallery_open_values', $markup_values );
 
-		if ($is_gallery ) {
+		if ( $is_gallery ) {
 			//$markup_values = apply_filters( 'mla_gallery_open_values', $markup_values );
 
 			$open_template = apply_filters( 'mla_gallery_open_template', $open_template );
@@ -836,19 +863,13 @@ class MLAShortcode_Support {
 			$gallery_open = apply_filters( 'mla_gallery_open_parse', $gallery_open, $open_template, $markup_values );
 			$output .= apply_filters( 'mla_gallery_style', $gallery_style . $gallery_open, $style_values, $markup_values, $style_template, $open_template );
 		} else {
-			if ( ! isset( $attachments['found_rows'] ) ) {
-				$attachments['found_rows'] = 0;
-			}
-
 			/*
 			 * Handle 'previous_page', 'next_page', and 'paginate_links'
 			 */
-			$pagination_result = self::_process_pagination_output_types( $output_parameters, $markup_values, $arguments, $attr, $attachments['found_rows'], $output );
+			$pagination_result = self::_process_pagination_output_types( $output_parameters, $markup_values, $arguments, $attr, $found_rows, $output );
 			if ( false !== $pagination_result ) {
 				return $pagination_result;
 			}
-
-			unset( $attachments['found_rows'] );
 		}
 
 		/*
@@ -865,36 +886,41 @@ class MLAShortcode_Support {
 			$is_wrap = isset( $output_parameters[1] ) && 'wrap' == $output_parameters[1];
 			$current_id = empty( $arguments['id'] ) ? $markup_values['id'] : $arguments['id'];
 
+			$pagination_index = 1;
 			foreach ( $attachments as $id => $attachment ) {
 				if ( $attachment->ID == $current_id ) {
 					break;
 				}
+				
+				$pagination_index++;
 			}
 
-			switch ( $link_type ) {
-				case 'previous_link':
-					$target_id = $id - 1;
-					break;
-				case 'next_link':
-					$target_id = $id + 1;
-					break;
-				case 'current_link':
-				default:
-					$target_id = $id;
-			} // link_type
-
 			$target = NULL;
-			if ( isset( $attachments[ $target_id ] ) ) {
-				$target = $attachments[ $target_id ];
-			} elseif ( $is_wrap ) {
+			if ( isset( $id ) ) {
 				switch ( $link_type ) {
 					case 'previous_link':
-						$target = array_pop( $attachments );
+						$target_id = $id - 1;
 						break;
 					case 'next_link':
-						$target = array_shift( $attachments );
+						$target_id = $id + 1;
+						break;
+					case 'current_link':
+					default:
+						$target_id = $id;
 				} // link_type
-			} // is_wrap
+			
+				if ( isset( $attachments[ $target_id ] ) ) {
+					$target = $attachments[ $target_id ];
+				} elseif ( $is_wrap ) {
+					switch ( $link_type ) {
+						case 'previous_link':
+							$target = array_pop( $attachments );
+							break;
+						case 'next_link':
+							$target = array_shift( $attachments );
+					} // link_type
+				} // is_wrap
+			} // isset id
 
 			if ( isset( $target ) ) {
 				$attachments = array( $target );			
@@ -914,7 +940,7 @@ class MLAShortcode_Support {
 			/*
 			 * fill in item-specific elements
 			 */
-			$item_values['index'] = (string) 1 + $column_index;
+			$item_values['index'] = (string) $is_gallery ? 1 + $column_index : $pagination_index;
 			$item_values['last_in_row'] = '';
 
 			$item_values['excerpt'] = wptexturize( $attachment->post_excerpt );
@@ -945,17 +971,6 @@ class MLAShortcode_Support {
 			$item_values['author'] = '';
 			$item_values['caption'] = '';
 			$item_values['captiontag_content'] = '';
-
-			$item_values['pagelink'] = '';
-			$item_values['filelink'] = '';
-			$item_values['link'] = '';
-			$item_values['pagelink_url'] = '';
-			$item_values['filelink_url'] = '';
-			$item_values['link_url'] = '';
-			$item_values['thumbnail_content'] = '';
-			$item_values['thumbnail_width'] = '';
-			$item_values['thumbnail_height'] = '';
-			$item_values['thumbnail_url'] = '';
 
 			$user = get_user_by( 'id', $attachment->post_author );
 			if ( isset( $user->data->display_name ) ) {
@@ -1079,6 +1094,7 @@ class MLAShortcode_Support {
 				$item_values['pagelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', $attachment->guid, $attachment->post_title );
 				$item_values['filelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', get_permalink( $attachment->ID ), $attachment->post_title );
 			}
+
 			if ( in_array( $attachment->post_mime_type, array( 'image/svg+xml' ) ) ) {
 				$registered_dimensions = self::_registered_dimensions();
 				if ( isset( $registered_dimensions[ $size_class ] ) ) {
@@ -1221,6 +1237,23 @@ class MLAShortcode_Support {
 				}
 			} // process <img> tag
 
+			/*
+			 * Create download link with all Content Parameters
+			 */
+			$match_count = preg_match( '#href=\'([^\']+)\'#', $item_values['filelink'], $matches, PREG_OFFSET_CAPTURE );
+			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+				$args = array( 'mla_download_file' => urlencode( $item_values['base_dir'] . '/' . $item_values['base_file'] ), 'mla_download_type' => $item_values['mime_type'] );
+				if ( 'log' == $arguments['mla_debug'] ) {
+					$args['mla_debug'] = 'log';
+				}
+
+				$item_values['downloadlink_url'] = add_query_arg( $args, MLA_PLUGIN_URL . 'includes/mla-file-downloader.php' );
+				$item_values['downloadlink'] = preg_replace( '#' . $matches[0][0] . '#', sprintf( 'href=\'%1$s\'', $item_values['downloadlink_url'] ), $item_values['filelink'] );
+			} else {
+				$item_values['downloadlink_url'] = $item_values['filelink_url'];
+				$item_values['downloadlink'] = $item_values['filelink'];
+			}
+
 			switch ( $arguments['link'] ) {
 				case 'permalink':
 				case 'post':
@@ -1229,6 +1262,9 @@ class MLAShortcode_Support {
 				case 'file':
 				case 'full':
 					$item_values['link'] = $item_values['filelink'];
+					break;
+				case 'download':
+					$item_values['link'] = $item_values['downloadlink'];
 					break;
 				default:
 					$item_values['link'] = $item_values['filelink'];
@@ -1257,6 +1293,13 @@ class MLAShortcode_Support {
 				$item_values['filelink_url'] = $matches[1][0][0];
 			} else {
 				$item_values['filelink_url'] = '';
+			}
+
+			$match_count = preg_match_all( '#href=\'([^\']+)\'#', $item_values['downloadlink'], $matches, PREG_OFFSET_CAPTURE );
+			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+				$item_values['downloadlink_url'] = $matches[1][0][0];
+			} else {
+				$item_values['downloadlink_url'] = '';
 			}
 
 			$match_count = preg_match_all( '#href=\'([^\']+)\'#', $item_values['link'], $matches, PREG_OFFSET_CAPTURE );
@@ -1307,7 +1350,7 @@ class MLAShortcode_Support {
 					 */
 					$feature = get_the_post_thumbnail( $attachment->ID, $size, array( 'class' => 'attachment-thumbnail' ) );
 					$feature = apply_filters( 'mla_gallery_featured_image', $feature, $attachment, $size, $item_values );
-					
+
 					if ( ! empty( $feature ) ) {
 						$match_count = preg_match_all( '# width=\"([^\"]+)\" height=\"([^\"]+)\" src=\"([^\"]+)\" #', $feature, $matches, PREG_OFFSET_CAPTURE );
 						if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
@@ -1447,9 +1490,11 @@ class MLAShortcode_Support {
 						if ( false === strpos( $link_attributes, 'title=' ) ) {
 							$item_values['pagelink'] = sprintf( '<a %1$shref="%2$s" title="%3$s">%4$s</a>', $link_attributes, $item_values['pagelink_url'], $rollover_text, $item_values['thumbnail_content'] );
 							$item_values['filelink'] = sprintf( '<a %1$shref="%2$s" title="%3$s">%4$s</a>', $link_attributes, $item_values['filelink_url'], $rollover_text, $item_values['thumbnail_content'] );
+							$item_values['downloadlink'] = sprintf( '<a %1$shref="%2$s" title="%3$s">%4$s</a>', $link_attributes, $item_values['downloadlink_url'], $rollover_text, $item_values['thumbnail_content'] );
 						} else {
 							$item_values['pagelink'] = sprintf( '<a %1$shref="%2$s">%3$s</a>', $link_attributes, $item_values['pagelink_url'], $item_values['thumbnail_content'] );
 							$item_values['filelink'] = sprintf( '<a %1$shref="%2$s">%3$s</a>', $link_attributes, $item_values['filelink_url'], $item_values['thumbnail_content'] );
+							$item_values['downloadlink'] = sprintf( '<a %1$shref="%2$s">%3$s</a>', $link_attributes, $item_values['downloadlink_url'], $item_values['thumbnail_content'] );
 						}
 						if ( ! empty( $link_href ) ) {
 							$item_values['link'] = sprintf( '<a %1$shref="%2$s" title="%3$s">%4$s</a>', $link_attributes, $link_href, $rollover_text, $item_values['thumbnail_content'] );
@@ -1457,6 +1502,8 @@ class MLAShortcode_Support {
 							$item_values['link'] = $item_values['pagelink'];
 						} elseif ( 'file' == $arguments['link'] ) {
 							$item_values['link'] = $item_values['filelink'];
+						} elseif ( 'download' == $arguments['link'] ) {
+							$item_values['link'] = $item_values['downloadlink'];
 						} elseif ( 'span' == $arguments['link'] ) {
 							$item_values['link'] = sprintf( '<a %1$s>%2$s</a>', $link_attributes, $item_values['thumbnail_content'] );
 						} else {
@@ -1714,7 +1761,7 @@ class MLAShortcode_Support {
 			$template = $arguments['mla_markup'];
 		} else {
 			$output_parameters = array_map( 'strtolower', array_map( 'trim', explode( ',', $arguments['mla_output'] ) ) );
-	
+
 			if ( 'grid' == $output_parameters[0] ) {
 				$template = MLACore::mla_get_option('default_tag_cloud_markup');
 			} elseif ( in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
@@ -1723,15 +1770,19 @@ class MLAShortcode_Support {
 				} else {
 					$template = 'tag-cloud-ul';
 				}
+			} else {
+				$template = NULL;
 			}
 		}
 
 		/*
 		 * Apply default arguments set in the markup template
 		 */
-		$arguments = MLATemplate_Support::mla_fetch_custom_template( $template, 'tag-cloud', 'markup', 'arguments' );
-		if ( !empty( $arguments ) ) {
-			$attr = wp_parse_args( $attr, self::_validate_attributes( array(), $arguments ) );
+		if ( !empty( $template ) ) {
+			$arguments = MLATemplate_Support::mla_fetch_custom_template( $template, 'tag-cloud', 'markup', 'arguments' );
+			if ( !empty( $arguments ) ) {
+				$attr = wp_parse_args( $attr, self::_validate_attributes( array(), $arguments ) );
+			}
 		}
 
 		/*
@@ -1820,11 +1871,11 @@ class MLAShortcode_Support {
 			if ( empty( $attr['itemtag'] ) ) {
 				$arguments['itemtag'] = 'dl';
 			}
-			
+
 			if ( empty( $attr['termtag'] ) ) {
 				$arguments['termtag'] = 'dt';
 			}
-			
+
 			if ( empty( $attr['captiontag'] ) ) {
 				$arguments['captiontag'] = 'dd';
 			}
@@ -1841,7 +1892,7 @@ class MLAShortcode_Support {
 				$default_markup = 'tag-cloud-ul';
 				$arguments['termtag'] = 'li';
 				$arguments['captiontag'] = '';
-			
+
 				switch ( $output_parameters[0] ) {
 					case 'ulist':
 						$arguments['itemtag'] = 'ul';
@@ -1920,7 +1971,7 @@ class MLAShortcode_Support {
 			if ( self::$mla_debug ) {
 				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty cloud', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$cloud = MLACore::mla_debug_flush();
-				
+
 				if ( '<p></p>' == $cloud ) {
 					$cloud = '';
 				}
@@ -1988,11 +2039,11 @@ class MLAShortcode_Support {
 				if ( 'array' == $arguments['mla_output'] ) {
 					return array( $cloud );
 				}
-	
+
 				if ( empty($arguments['echo']) ) {
 					return $cloud;
 				}
-	
+
 				echo $cloud;
 				return;
 			}
@@ -2345,7 +2396,10 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$link_attributes .= 'class="' . self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) . '" ';
+				$class_attributes = self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values );
+				if ( !empty( $class_attributes ) ) {
+					$link_attributes .= 'class="' . $class_attributes . '" ';
+				}
 			}
 
 			$item_values['link_attributes'] = $link_attributes;
@@ -2549,11 +2603,11 @@ class MLAShortcode_Support {
 			} else {
 				$open_template = false;
 			}
-			
+
 			if ( false === $open_template ) {
 				$open_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'term-list', 'markup', 'open' );
 			}
-			
+
 			/*
 			 * Fall back to default template if no Open section
 			 */
@@ -2565,7 +2619,7 @@ class MLAShortcode_Support {
 				} else {
 					$open_template = false;
 				}
-			
+
 				if ( false === $open_template ) {
 					$open_template = MLATemplate_support::mla_fetch_custom_template( $default_markup, 'term-list', 'markup', 'open' );
 				}
@@ -2580,11 +2634,11 @@ class MLAShortcode_Support {
 			} else {
 				$item_template = false;
 			}
-			
+
 			if ( false === $item_template ) {
 				$item_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'term-list', 'markup', 'item' );
 			}
-			
+
 			if ( empty( $item_template ) ) {
 				$item_template = '';
 			}
@@ -2594,11 +2648,11 @@ class MLAShortcode_Support {
 			} else {
 				$close_template = false;
 			}
-			
+
 			if ( false === $close_template ) {
 				$close_template = MLATemplate_support::mla_fetch_custom_template( $markup_values['mla_markup'], 'term-list', 'markup', 'close' );
 			}
-			
+
 			if ( empty( $close_template ) ) {
 				$close_template = '';
 			}
@@ -2609,7 +2663,7 @@ class MLAShortcode_Support {
 				 */
 				$new_text = $open_template . $close_template;
 				$markup_values = MLAData::mla_expand_field_level_parameters( $new_text, $attr, $markup_values );
-	
+
 				$markup_values = apply_filters( 'mla_term_list_open_values', $markup_values );
 				$open_template = apply_filters( 'mla_term_list_open_template', $open_template );
 				if ( empty( $open_template ) ) {
@@ -2617,14 +2671,14 @@ class MLAShortcode_Support {
 				} else {
 					$gallery_open = MLAData::mla_parse_template( $open_template, $markup_values );
 				}
-	
+
 				$list .=  apply_filters( 'mla_term_list_open_parse', $gallery_open, $open_template, $markup_values );
 			}
 		} // is_list
 
 		foreach ( $terms as $key => $term ) {
 			$item_values = $markup_values;
-			
+
 			/*
 			 * fill in item-specific elements
 			 */
@@ -2673,7 +2727,7 @@ class MLAShortcode_Support {
 					}
 				}
 			}
-			
+
 			/*
 			 * Add item_specific field-level substitution parameters
 			 */
@@ -2766,7 +2820,7 @@ class MLAShortcode_Support {
 				} else {
 					$pad = '';
 				}
-				
+
 				if ( empty( $arguments['mla_option_text'] ) ) {
 					$item_values['thelabel'] = $pad . $item_values['link_text'];
 				} else {
@@ -2780,7 +2834,7 @@ class MLAShortcode_Support {
 				}
 
 				$item_values['popular'] = ''; // TODO Calculate 'term-list-popular'
-				
+
 				if ( $item_values['current_item_class'] == $arguments['current_item_class'] ) {
 					if ( $is_dropdown ) {
 						$item_values['selected'] = 'selected=selected';
@@ -2850,7 +2904,7 @@ class MLAShortcode_Support {
 			'mla_link_text' => '',
 			'mla_rollover_text' => '',
 			'mla_caption' => '',
-			
+
 			'mla_option_text' => '',
 			'mla_option_value' => '',
 		);
@@ -3007,7 +3061,7 @@ class MLAShortcode_Support {
 			$template = $arguments['mla_markup'];
 		} else {
 			$output_parameters = array_map( 'strtolower', array_map( 'trim', explode( ',', $arguments['mla_output'] ) ) );
-	
+
 			if ( in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
 				if ( ( 'dlist' == $output_parameters[0] ) || ('list' == $output_parameters[0] && 'dd' == $arguments['captiontag'] ) ) {
 					$template = 'term-list-dl';
@@ -3020,7 +3074,7 @@ class MLAShortcode_Support {
 				$template = 'term-list-checklist';
 			}
 		}
-		
+
 		/*
 		 * Apply default arguments set in the markup template
 		 */
@@ -3108,7 +3162,7 @@ class MLAShortcode_Support {
 		$output_parameters = array_map( 'strtolower', array_map( 'trim', explode( ',', $arguments['mla_output'] ) ) );
 
 		if ( $is_list = in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
-			$default_style = 'none';
+			$default_style = 'term-list';
 
 			if ( 'list' == $output_parameters[0] && 'dd' == $arguments['captiontag'] ) {
 				$default_markup = 'term-list-dl';
@@ -3118,7 +3172,7 @@ class MLAShortcode_Support {
 				$default_markup = 'term-list-ul';
 				$arguments['termtag'] = 'li';
 				$arguments['captiontag'] = '';
-			
+
 				switch ( $output_parameters[0] ) {
 					case 'ulist':
 						$arguments['itemtag'] = 'ul';
@@ -3147,7 +3201,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( $is_dropdown = 'dropdown' == $output_parameters[0] ) {
-			$default_style = 'none';
+			$default_style = 'term-list';
 			$default_markup = 'term-list-dropdown';
 			$arguments['itemtag'] = 'select';
 			$arguments['termtag'] = 'option';
@@ -3162,7 +3216,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( $is_checklist = 'checklist' == $output_parameters[0] ) {
-			$default_style = 'none';
+			$default_style = 'term-list';
 			$default_markup = 'term-list-checklist';
 			$arguments['termtag'] = 'li';
 
@@ -3176,7 +3230,7 @@ class MLAShortcode_Support {
 		}
 
 		$is_hierarchical = !empty( $arguments['hierarchical'] ) && ( 'true' == strtolower( $arguments['hierarchical'] ) );
-		
+
 		/*
 		 * Convert lists to arrays
 		 */
@@ -3199,7 +3253,7 @@ class MLAShortcode_Support {
 		} else {
 			$exclude_later = NULL;
 		}
-			
+
 		$tags = self::mla_get_terms( $arguments );
 		if ( !empty( $exclude_later ) ) {
 			$arguments['exclude'] = $exclude_later;
@@ -3238,7 +3292,7 @@ class MLAShortcode_Support {
 			if ( self::$mla_debug ) {
 				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty list', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$list = MLACore::mla_debug_flush();
-				
+
 				if ( '<p></p>' == $list ) {
 					$list = '';
 				}
@@ -3248,7 +3302,7 @@ class MLAShortcode_Support {
 
 			if ( 'array' == $arguments['mla_output'] ) {
 				$list .= $arguments['mla_nolink_text'];
-				
+
 				if ( empty( $list ) ) {
 					return array();
 				} else {
@@ -3286,7 +3340,7 @@ class MLAShortcode_Support {
 				if ( empty($arguments['echo']) ) {
 					return $list;
 				}
-	
+
 				echo $list;
 				return;
 			}
@@ -3300,18 +3354,18 @@ class MLAShortcode_Support {
 
 		if ( $is_hierarchical ) {
 			$tags = self::_get_term_tree( $tags, $arguments );
-	
+
 			if ( is_wp_error( $tags ) ) {
 				$list =  '<strong>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . $tags->get_error_message() . '</strong>, ' . $tags->get_error_data( $tags->get_error_code() );
 
 				if ( 'array' == $arguments['mla_output'] ) {
 					return array( $list );
 				}
-	
+
 				if ( empty($arguments['echo']) ) {
 					return $list;
 				}
-	
+
 				echo $list;
 				return;
 			}
@@ -3332,22 +3386,22 @@ class MLAShortcode_Support {
 						$link = get_term_link( intval($tag->term_id), $tag->taxonomy );
 						$tags[ $key ]->term_link = $link;
 					}
-		
+
 					if ( is_wp_error( $link ) ) {
 						$list =  '<strong>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . $link->get_error_message() . '</strong>, ' . $link->get_error_data( $link->get_error_code() );
-		
+
 						if ( 'array' == $arguments['mla_output'] ) {
 							return array( $list );
 						}
-			
+
 						if ( empty($arguments['echo']) ) {
 							return $list;
 						}
-			
+
 						echo $list;
 						return;
 					}
-		
+
 					if ( 'edit' == $arguments['link'] ) {
 						$tags[ $key ]->link = $tags[ $key ]->edit_link;
 					} else {
@@ -3380,7 +3434,7 @@ class MLAShortcode_Support {
 			array_unshift( $tags[ $option_all->taxonomy ], $option_all );
 			$found_rows += 1;
 		}
-		
+
 		$style_values = array_merge( $page_values, array(
 			'mla_output' => $arguments['mla_output'],
 			'mla_style' => $arguments['mla_style'],
@@ -3403,7 +3457,7 @@ class MLAShortcode_Support {
 		) );
 
 		$style_template = $gallery_style = '';
-		$use_mla_term_list_style = $is_list && ( 'none' != strtolower( $style_values['mla_style'] ) );
+		$use_mla_term_list_style = 'none' != strtolower( $style_values['mla_style'] );
 		if ( apply_filters( 'use_mla_term_list_style', $use_mla_term_list_style, $style_values['mla_style'] ) ) {
 			$style_template = MLATemplate_support::mla_fetch_custom_template( $style_values['mla_style'], 'term-list', 'style' );
 			if ( empty( $style_template ) ) {
@@ -3431,7 +3485,7 @@ class MLAShortcode_Support {
 		 * Accumulate links for flat and array output
 		 */
 		$tag_links = array();
-		
+
 		if ( $is_hierarchical ) {
 			foreach( $tags as $taxonomy => $root_terms ) {
 
@@ -3489,7 +3543,7 @@ class MLAShortcode_Support {
 		if ( empty( $attr['mla_output'] ) ) {
 			return 'mla_output is empty';
 		}
-		
+
 		switch ( $attr['mla_output'] ) {
 			case 'wp_list_categories':
 				return wp_list_categories( $attr );
@@ -3501,7 +3555,7 @@ class MLAShortcode_Support {
 			default:
 				//return 'mla_output not recognized';
 		}
-		
+
 		return self::mla_term_list( $attr );
 	}
 
@@ -3548,7 +3602,8 @@ class MLAShortcode_Support {
 	 * @return string parameter with brackets, braces, substitution parameters and templates processed
 	 */
 	private static function _process_shortcode_parameter( $text, $markup_values ) {
-		$new_text = str_replace( '{', '[', str_replace( '}', ']', $text ) );
+		$new_text = str_replace( '{\+', '\[\+', str_replace( '+\}', '+\\\\]', $text ) );
+		$new_text = str_replace( '{', '[', str_replace( '}', ']', $new_text ) );
 		$new_text = str_replace( '\[', '{', str_replace( '\]', '}', $new_text ) );
 		return MLAData::mla_parse_template( $new_text, $markup_values );
 	}
@@ -3962,7 +4017,7 @@ class MLAShortcode_Support {
 		global $wpdb;
 
 		$results = array ();
-		$order = isset( $query_parameters['order'] ) ? ' ' . $query_parameters['order'] : '';
+		$order = isset( $query_parameters['order'] ) ? ' ' . trim( strtoupper( $query_parameters['order'] ) ) : '';
 		$orderby = isset( $query_parameters['orderby'] ) ? $query_parameters['orderby'] : '';
 		$meta_key = isset( $query_parameters['meta_key'] ) ? $query_parameters['meta_key'] : '';
 
@@ -3975,7 +4030,7 @@ class MLAShortcode_Support {
 				'empty_orderby_default' => 'post_date',
 				'explicit_orderby_field' => 'post__in',
 				'explicit_orderby_column' => 'ID',
-				'ID' => 'ID',
+				'id' => 'ID',
 				'author' => 'post_author',
 				'date' => 'post_date',
 				'description' => 'post_content',
@@ -4027,29 +4082,35 @@ class MLAShortcode_Support {
 		$obmatches = preg_split('/\s*,\s*/', trim($query_parameters['orderby']));
 		foreach ( $obmatches as $index => $value ) {
 			$count = preg_match('/([a-z0-9_]+)(\s+(ASC|DESC))?/i', $value, $matches);
-
-			if ( $count && ( $value == $matches[0] ) && array_key_exists( $matches[1], $allowed_keys ) ) {
-				if ( ( 'rand' == $matches[1] ) || ( 'random' == $matches[1] ) ){
-						$results[] = 'RAND()';
-				} else {
-					switch ( $matches[1] ) {
-						case $meta_key:
-						case 'meta_value':
-							$matches[1] = "$wpdb->postmeta.meta_value";
-							break;
-						case 'meta_value_num':
-							$matches[1] = "$wpdb->postmeta.meta_value+0";
-							break;
-						default:
-							if ( in_array( $matches[1], $binary_keys ) ) {
-								$matches[1] = 'BINARY ' . $table_prefix . $allowed_keys[ $matches[1] ];
-							} else {
-								$matches[1] = $table_prefix . $allowed_keys[ $matches[1] ];
-							}
-					} // switch $matches[1]
-
-					$results[] = isset( $matches[2] ) ? $matches[1] . $matches[2] : $matches[1] . $order;
-				} // not 'rand'
+			if ( $count && ( $value == $matches[0] ) ) {
+				$matches[1] = strtolower( $matches[1] );
+				if ( isset( $matches[2] ) ) {
+					$matches[2] = strtoupper( $matches[2] );
+				}
+				
+				if ( array_key_exists( $matches[1], $allowed_keys ) ) {
+					if ( ( 'rand' == $matches[1] ) || ( 'random' == $matches[1] ) ){
+							$results[] = 'RAND()';
+					} else {
+						switch ( $matches[1] ) {
+							case $meta_key:
+							case 'meta_value':
+								$matches[1] = "$wpdb->postmeta.meta_value";
+								break;
+							case 'meta_value_num':
+								$matches[1] = "$wpdb->postmeta.meta_value+0";
+								break;
+							default:
+								if ( in_array( $matches[1], $binary_keys ) ) {
+									$matches[1] = 'BINARY ' . $table_prefix . $allowed_keys[ $matches[1] ];
+								} else {
+									$matches[1] = $table_prefix . $allowed_keys[ $matches[1] ];
+								}
+						} // switch $matches[1]
+	
+						$results[] = isset( $matches[2] ) ? $matches[1] . $matches[2] : $matches[1] . $order;
+					} // not 'rand'
+				} // allowed key
 			} // valid column specification
 		} // foreach $obmatches
 
@@ -4128,6 +4189,7 @@ class MLAShortcode_Support {
 			'mla_terms_taxonomies' => '',
 			'mla_phrase_delimiter' => '',
 			'mla_phrase_connector' => '',
+			'mla_term_delimiter' => '',
 			'mla_term_connector' => '',
 			// Search
 			's' => '',
@@ -4150,7 +4212,7 @@ class MLAShortcode_Support {
 	 *
 	 * @param int Post ID of the parent
 	 * @param array Attributes of the shortcode
-	 * @param boolean true to calculate and return ['found_posts'] as an array element
+	 * @param boolean true to calculate and return ['found_rows', 'max_num_pages'] as array elements
 	 *
 	 * @return array List of attachments returned from WP_Query
 	 */
@@ -4515,6 +4577,7 @@ class MLAShortcode_Support {
 				unset( $arguments[ $key ] );
 				break;
 			case 'mla_phrase_delimiter':
+			case 'mla_term_delimiter':
 				if ( ! empty( $value ) ) {
 					MLAQuery::$search_parameters[ $key ] = substr( $value, 0, 1 );
 				}
@@ -4523,6 +4586,7 @@ class MLAShortcode_Support {
 				break;
 			case 'mla_terms_phrases':
 				$children_ok = false;
+				$value = stripslashes( trim( $value ) );
 				// fallthru
 			case 'mla_terms_taxonomies':
 			case 'mla_search_fields':
@@ -4537,7 +4601,7 @@ class MLAShortcode_Support {
 				unset( $arguments[ $key ] );
 				break;
 			case 's':
-				MLAQuery::$search_parameters['s'] = trim( $value );
+				MLAQuery::$search_parameters['s'] = stripslashes( trim( $value ) );
 				// fallthru
 			case 'author_name':
 			case 'category_name':
@@ -4695,11 +4759,11 @@ class MLAShortcode_Support {
 
 		if ( ! empty($query_arguments['include']) ) {
 			$incposts = wp_parse_id_list( $query_arguments['include'] );
-			
+
 			if ( ! ( isset( $query_arguments['posts_per_page'] ) && ( 0 < $query_arguments['posts_per_page'] ) ) ) {
 				$query_arguments['posts_per_page'] = count($incposts);  // only the number of posts included
 			}
-			
+
 			$query_arguments['post__in'] = $incposts;
 			unset( $query_arguments['include'] );
 		} elseif ( ! empty($query_arguments['exclude']) ) {
@@ -4752,7 +4816,7 @@ class MLAShortcode_Support {
 				MLAQuery::$search_parameters['mla_terms_search']['phrases'] = MLAQuery::$search_parameters['mla_terms_phrases'];
 
 				if ( empty( MLAQuery::$search_parameters['mla_phrase_delimiter'] ) ) {
-					MLAQuery::$search_parameters['mla_terms_search']['phrase_delimiter'] = ',';
+					MLAQuery::$search_parameters['mla_terms_search']['phrase_delimiter'] = ' ';
 				} else {
 					MLAQuery::$search_parameters['mla_terms_search']['phrase_delimiter'] = MLAQuery::$search_parameters['mla_phrase_delimiter'];
 				}
@@ -4761,6 +4825,12 @@ class MLAShortcode_Support {
 					MLAQuery::$search_parameters['mla_terms_search']['radio_phrases'] = 'AND';
 				} else {
 					MLAQuery::$search_parameters['mla_terms_search']['radio_phrases'] = MLAQuery::$search_parameters['mla_phrase_connector'];
+				}
+
+				if ( empty( MLAQuery::$search_parameters['mla_term_delimiter'] ) ) {
+					MLAQuery::$search_parameters['mla_terms_search']['term_delimiter'] = ',';
+				} else {
+					MLAQuery::$search_parameters['mla_terms_search']['term_delimiter'] = MLAQuery::$search_parameters['mla_term_delimiter'];
 				}
 
 				if ( empty( MLAQuery::$search_parameters['mla_term_connector'] ) ) {
@@ -4851,7 +4921,7 @@ class MLAShortcode_Support {
 		if ( class_exists( 'MLA_Polylang' ) ) {
 			$query_arguments = apply_filters( 'mla_get_shortcode_attachments_final_terms', $query_arguments, $return_found_rows );
 		}
-		
+
 		MLAShortcodes::$mla_gallery_wp_query_object = new WP_Query;
 		$attachments = MLAShortcodes::$mla_gallery_wp_query_object->query( $query_arguments );
 
@@ -4866,7 +4936,8 @@ class MLAShortcode_Support {
 		}
 
 		if ( $return_found_rows ) {
-			$attachments['found_rows'] = MLAShortcodes::$mla_gallery_wp_query_object->found_posts;
+			$attachments['found_rows'] = absint( MLAShortcodes::$mla_gallery_wp_query_object->found_posts );
+			$attachments['max_num_pages'] = absint( MLAShortcodes::$mla_gallery_wp_query_object->max_num_pages );
 		}
 
 		if ( ! empty( MLAQuery::$search_parameters ) ) {
@@ -5155,7 +5226,7 @@ class MLAShortcode_Support {
 		/*
 		 * Build an array of individual clauses that can be filtered
 		 */
-		$clauses = array( 'fields' => '', 'join' => '', 'where' => '', 'order' => '', 'orderby' => '', 'limits' => '', );
+		$clauses = array( 'fields' => '', 'join' => '', 'where' => '', 'orderby' => '', 'limits' => '', );
 
 		/*
 		 * If we're not counting attachments per term, strip
@@ -5312,7 +5383,7 @@ class MLAShortcode_Support {
 		/*
 		 * For the inner/initial query, always select the most popular terms
 		 */
-		if ( $arguments['no_orderby'] ) {
+		if ( $no_orderby = 'true' == (string) $arguments['no_orderby'] ) {
 			$arguments['orderby'] = 'count';
 			$arguments['order']  = 'DESC';
 		}
@@ -5320,38 +5391,22 @@ class MLAShortcode_Support {
 		/*
 		 * Add sort order
 		 */
-		$orderby = strtolower( $arguments['orderby'] );
-		$order = strtoupper( $arguments['order'] );
-		if ( 'DESC' != $order ) {
-			$order = 'ASC';
+		if ( 'true' == strtolower( $arguments['preserve_case'] ) ) {
+			$binary_keys = array( 'name', 'slug', );
+		} else {
+			$binary_keys = array();
 		}
 
-		$clauses['order'] = $order;
-		$clauses['orderby'] = "ORDER BY {$orderby}";
+		$allowed_keys = array(
+			'empty_orderby_default' => 'name',
+			'count' => 'count',
+			'id' => 'term_id',
+			'name' => 'name',
+			'random' => 'RAND()',
+			'slug' => 'slug',
+		);
 
-		/*
-		 * Count, Descending, is the default order so no further work
-		 * is needed unless a different order is specified
-		 */
-		if ( 'count' != $orderby || 'DESC' != $order ) {
-		    if ( 'true' == strtolower( $arguments['preserve_case'] ) ) {
-				$binary_keys = array( 'name', 'slug', );
-			} else {
-				$binary_keys = array();
-			}
-
-			$allowed_keys = array(
-				'empty_orderby_default' => 'name',
-				'count' => 'count',
-				'id' => 'term_id',
-				'name' => 'name',
-				'random' => 'RAND()',
-				'slug' => 'slug',
-			);
-
-			$clause = 'ORDER BY ' . self::_validate_sql_orderby( $arguments, '', $allowed_keys, $binary_keys );
-			$clauses['orderby'] = substr( $clause, 0, strrpos( $clause, ' ' . $order ) );
-		} // add ORDER BY
+		$clauses['orderby'] = 'ORDER BY ' . self::_validate_sql_orderby( $arguments, '', $allowed_keys, $binary_keys );
 
 		/*
 		 * Add pagination
@@ -5390,7 +5445,7 @@ class MLAShortcode_Support {
 		 * If specifically told to omit the ORDER BY clause or the COUNT,
 		 * supply a sort order for the initial/inner query only
 		 */
-		if ( ! ( $arguments['no_orderby'] || $no_count ) ) {
+		if ( ! ( $no_orderby || $no_count ) ) {
 			$query[] = 'ORDER BY count DESC, t.term_id ASC';
 		}
 
@@ -5406,9 +5461,9 @@ class MLAShortcode_Support {
 		 * $final_clauses, if present, require an SQL subquery
 		 */
 		$final_clauses = array();
-		if ( 'count' != $orderby || 'DESC' != $order ) {
+
+		if ( 'ORDER BY count DESC' != $clauses['orderby'] ) {
 			$final_clauses[] = $clauses['orderby'];
-			$final_clauses[] = $clauses['order'];
 		}
 
 		if ( '' !== $clauses['limits'] ) {
@@ -5469,11 +5524,11 @@ class MLAShortcode_Support {
 	 */
 	private static function _get_term_tree( &$terms, $arguments = array() ) {
 		$term = current( $terms );
-		
+
 		if ( empty( $term ) or ! isset( $term->parent ) ) {
 			return array();
 		}
-		
+
 		/*
 		 * Set found_rows aside to be restored later
 		 */
@@ -5487,7 +5542,7 @@ class MLAShortcode_Support {
 		$child_of = ! empty( $arguments['child_of'] ) ? absint( $arguments['child_of'] ) : NULL;
 		$include_tree = ! empty( $arguments['include_tree'] ) ? wp_parse_id_list( $arguments['include_tree'] ) : NULL;
 		$exclude_tree = empty( $include_tree ) && !empty( $arguments['exclude_tree'] ) ? wp_parse_id_list( $arguments['exclude_tree'] ) : NULL;
-		
+
 		$depth = !empty( $arguments['depth'] ) ? absint( $arguments['depth'] ) : 0;
 		$term_tree = array();
 		$root_ids = array();
@@ -5531,12 +5586,12 @@ class MLAShortcode_Support {
 				$term_tree[ $taxonomy ] = array();
 				$root_ids[ $taxonomy ] = array();
 			}
-			
+
 			while ( !empty( $tax_parents ) ) {
 				foreach( $tax_parents as $parent_id => $children ) {
 					foreach( $children as $index => $child ) {
 						if ( ! array_key_exists( $child->term_id, $tax_parents ) ) {
-	
+
 							if ( array_key_exists( $child->parent, $root_ids[ $taxonomy ] ) ) {
 								// Found a root node - attach the leaf
 								$term_tree[ $taxonomy ][ $root_ids[ $taxonomy ][ $child->parent ] ]->children[] = $child;
@@ -5554,7 +5609,7 @@ class MLAShortcode_Support {
 								$term_tree[ $taxonomy ][] = $child;
 								$root_ids[ $taxonomy ][ $child->term_id ] = count( $term_tree[ $taxonomy ] ) - 1;
 							} // Move the leaf node
-							
+
 							unset( $tax_parents[ $parent_id ][ $index ] );
 							if ( empty( $tax_parents[ $parent_id ] ) ) {
 								unset( $tax_parents[ $parent_id ] );
@@ -5579,7 +5634,7 @@ class MLAShortcode_Support {
 					continue;
 				}
 			} // $child_of
-			
+
 			if ( $include_tree ) {
 				$result = self::_find_include_tree( $term_tree[ $taxonomy ], $include_tree );
 				if ( false !== $result ) {
@@ -5589,14 +5644,14 @@ class MLAShortcode_Support {
 					continue;
 				}
 			} // $include_tree
-			
+
 			if ( $exclude_tree ) {
 				self::_remove_exclude_tree( $term_tree[ $taxonomy ], $exclude_tree );
 			} // $include_tree
-			
+
 			$term_count = 0;
 			$root_limit = count( $term_tree[ $taxonomy ] );
-			
+
 			if ( $root_limit ) {
 				for ( $root_index = 0; $root_index < $root_limit; $root_index++ ) {
 					if ( isset( $term_tree[ $taxonomy ][ $root_index ] ) ) {
@@ -5614,7 +5669,7 @@ class MLAShortcode_Support {
 			$term_tree[ $taxonomy ]['found_rows'] = $term_count;
 			$all_terms_count += $term_count;
 		}
-		
+
 		$term_tree['found_rows'] = $all_terms_count;
 		return $term_tree;
 	} // _get_term_tree
@@ -5634,13 +5689,13 @@ class MLAShortcode_Support {
 			if ( $parent_id == $parent->term_id ) {
 				return $parent;
 			}
-		
+
 			$result = self::_find_child_of( $parent->children, $parent_id );
 			if ( false !== $result ) {
 				return $result;
 			}
 		}
-		
+
 		return false;
 	} // _find_child_of
 
@@ -5656,7 +5711,7 @@ class MLAShortcode_Support {
 	 */
 	private static function _find_include_tree( &$terms, $include_tree ) {
 		$new_tree = array();
-		
+
 		foreach( $terms as $term ) {
 			if ( in_array( $term->term_id, $include_tree ) ) {
 				$new_tree[] = $term;
@@ -5671,7 +5726,7 @@ class MLAShortcode_Support {
 		if ( empty( $new_tree ) ) {		
 			return false;
 		}
-		
+
 		return $new_tree;
 	} // _find_include_tree
 
@@ -5711,13 +5766,13 @@ class MLAShortcode_Support {
 	private static function _count_term_children( &$parent, $depth = 0 ) {
 		$term_count = 0;
 		$child_level = $parent->level + 1;
-		
+
 		// level is zero-based, depth is one-based
 		if ( $depth && $child_level >= $depth ) {
 			$parent->children = array();
 			return 0;
 		}
-		
+
 		$child_limit = count( $parent->children );
 		for ( $child_index = 0; $child_index < $child_limit; $child_index++ ) {
 				if ( isset( $parent->children[ $child_index ] ) ) {

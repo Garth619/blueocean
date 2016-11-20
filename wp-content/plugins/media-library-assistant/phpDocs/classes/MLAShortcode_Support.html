@@ -1,883 +1,1955 @@
-<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<meta charset="utf-8">
-<title>Media Library Assistant » \MLAShortcode_Support</title>
-<meta name="author" content="Mike van Riel">
-<meta name="description" content="">
-<link href="../css/template.css" rel="stylesheet" media="all">
-<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
-<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Media Library Assistant</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
 </head>
 <body>
+
 <div class="navbar navbar-fixed-top">
-<div class="navbar-inner"><div class="container">
-<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Media Library Assistant</a><div class="nav-collapse"><ul class="nav">
-<li class="dropdown">
-<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
-                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a>Packages</a></li>
-<li><a href="../packages/Media%20Library%20Assistant.html"><i class="icon-folder-open"></i> Media Library Assistant</a></li>
-</ul>
-</li>
-<li class="dropdown" id="charts-menu">
-<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
-                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
-</li>
-<li class="dropdown" id="reports-menu">
-<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
-                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
-<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">0</span></a></li>
-<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
-                <ul><li>todo 
-                <span class="label label-info">3</span>
-</li></ul></a></li>
-<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
-                <span class="label label-info">0</span></a></li>
-</ul>
-</li>
-</ul></div>
-</div></div>
-<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
-</div>
-<div id="___" class="container">
-<noscript><div class="alert alert-warning">
-                            Javascript is disabled; several features are only available
-                            if Javascript is enabled.
-                        </div></noscript>
-<div class="row">
-<div class="span4">
-<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
-<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
-</div>
-<ul class="side-nav nav nav-list">
-<li class="nav-header">
-<i class="icon-custom icon-method"></i> Methods</li>
-<li class="method public "><a href="#_compose_term_list" title="_compose_term_list :: Compose one level of an mla_term_list"><span class="description">Compose one level of an mla_term_list</span><pre>_compose_term_list()</pre></a></li>
-<li class="method public "><a href="#mla_gallery_shortcode" title="mla_gallery_shortcode :: The MLA Gallery shortcode."><span class="description">The MLA Gallery shortcode.</span><pre>mla_gallery_shortcode()</pre></a></li>
-<li class="method public "><a href="#mla_get_shortcode_attachments" title="mla_get_shortcode_attachments :: Parses shortcode parameters and returns the gallery objects"><span class="description">Parses shortcode parameters and returns the gallery objects</span><pre>mla_get_shortcode_attachments()</pre></a></li>
-<li class="method public "><a href="#mla_get_terms" title="mla_get_terms :: Retrieve the terms in one or more taxonomies."><span class="description">Retrieve the terms in one or more taxonomies.</span><pre>mla_get_terms()</pre></a></li>
-<li class="method public "><a href="#mla_ghostscript_present" title="mla_ghostscript_present :: Verify the presence of Ghostscript for mla_viewer"><span class="description">Verify the presence of Ghostscript for mla_viewer</span><pre>mla_ghostscript_present()</pre></a></li>
-<li class="method public "><a href="#mla_shortcode_query_posts_clauses_filter" title="mla_shortcode_query_posts_clauses_filter :: Filters all clauses for shortcode queries, pre caching plugins"><span class="description">Filters all clauses for shortcode queries, pre caching plugins</span><pre>mla_shortcode_query_posts_clauses_filter()</pre></a></li>
-<li class="method public "><a href="#mla_shortcode_query_posts_clauses_request_filter" title="mla_shortcode_query_posts_clauses_request_filter :: Filters all clauses for shortcode queries, post caching plugins"><span class="description">Filters all clauses for shortcode queries, post caching plugins</span><pre>mla_shortcode_query_posts_clauses_request_filter()</pre></a></li>
-<li class="method public "><a href="#mla_shortcode_query_posts_join_filter" title="mla_shortcode_query_posts_join_filter :: Filters the JOIN clause for shortcode queries"><span class="description">Filters the JOIN clause for shortcode queries</span><pre>mla_shortcode_query_posts_join_filter()</pre></a></li>
-<li class="method public "><a href="#mla_shortcode_query_posts_orderby_filter" title="mla_shortcode_query_posts_orderby_filter :: Filters the ORDERBY clause for shortcode queries"><span class="description">Filters the ORDERBY clause for shortcode queries</span><pre>mla_shortcode_query_posts_orderby_filter()</pre></a></li>
-<li class="method public "><a href="#mla_shortcode_query_posts_where_filter" title="mla_shortcode_query_posts_where_filter :: Filters the WHERE clause for shortcode queries"><span class="description">Filters the WHERE clause for shortcode queries</span><pre>mla_shortcode_query_posts_where_filter()</pre></a></li>
-<li class="method public "><a href="#mla_tag_cloud" title="mla_tag_cloud :: The MLA Tag Cloud support function."><span class="description">The MLA Tag Cloud support function.</span><pre>mla_tag_cloud()</pre></a></li>
-<li class="method public "><a href="#mla_tag_cloud_shortcode" title="mla_tag_cloud_shortcode :: The MLA Tag Cloud shortcode."><span class="description">The MLA Tag Cloud shortcode.</span><pre>mla_tag_cloud_shortcode()</pre></a></li>
-<li class="method public "><a href="#mla_term_list" title="mla_term_list :: The MLA Term List support function."><span class="description">The MLA Term List support function.</span><pre>mla_term_list()</pre></a></li>
-<li class="method public "><a href="#mla_term_list_shortcode" title="mla_term_list_shortcode :: The MLA Term List shortcode."><span class="description">The MLA Term List shortcode.</span><pre>mla_term_list_shortcode()</pre></a></li>
-<li class="nav-header private">» Private</li>
-<li class="method private "><a href="#_count_term_children" title="_count_term_children :: Add level to term children and count them, all levels."><span class="description">Add level to term children and count them, all levels.</span><pre>_count_term_children()</pre></a></li>
-<li class="method private "><a href="#_find_child_of" title="_find_child_of :: Find a term that matches $child_of"><span class="description">Find a term that matches $child_of</span><pre>_find_child_of()</pre></a></li>
-<li class="method private "><a href="#_find_include_tree" title="_find_include_tree :: Find the term(s) that match $include_tree"><span class="description">Find the term(s) that match $include_tree</span><pre>_find_include_tree()</pre></a></li>
-<li class="method private "><a href="#_get_term_tree" title="_get_term_tree :: Walk a list of terms and find hierarchy, preserving source order."><span class="description">Walk a list of terms and find hierarchy, preserving source order.</span><pre>_get_term_tree()</pre></a></li>
-<li class="method private "><a href="#_pad_term_counts" title="_pad_term_counts :: Add count of children to parent count."><span class="description">Add count of children to parent count.</span><pre>_pad_term_counts()</pre></a></li>
-<li class="method private "><a href="#_paginate_links" title="_paginate_links :: Handles pagnation output types 'previous_page', 'next_page', and 'paginate_links'"><span class="description">Handles pagnation output types 'previous_page', 'next_page', and 'paginate_links'</span><pre>_paginate_links()</pre></a></li>
-<li class="method private "><a href="#_process_pagination_output_types" title="_process_pagination_output_types :: Handles pagnation output types 'previous_page', 'next_page', and 'paginate_links'"><span class="description">Handles pagnation output types 'previous_page', 'next_page', and 'paginate_links'</span><pre>_process_pagination_output_types()</pre></a></li>
-<li class="method private "><a href="#_process_shortcode_parameter" title="_process_shortcode_parameter :: Handles brace/bracket escaping and parses template for a shortcode parameter"><span class="description">Handles brace/bracket escaping and parses template for a shortcode parameter</span><pre>_process_shortcode_parameter()</pre></a></li>
-<li class="method private "><a href="#_registered_dimensions" title="_registered_dimensions :: Computes image dimensions for scalable graphics, e.g., SVG"><span class="description">Computes image dimensions for scalable graphics, e.g., SVG</span><pre>_registered_dimensions()</pre></a></li>
-<li class="method private "><a href="#_remove_exclude_tree" title="_remove_exclude_tree :: Remove the term(s) that match $exclude_tree"><span class="description">Remove the term(s) that match $exclude_tree</span><pre>_remove_exclude_tree()</pre></a></li>
-<li class="method private "><a href="#_sanitize_query_specification" title="_sanitize_query_specification :: Cleans up damage caused by the Visual Editor to the tax_query and meta_query specifications"><span class="description">Cleans up damage caused by the Visual Editor to the tax_query and meta_query specifications</span><pre>_sanitize_query_specification()</pre></a></li>
-<li class="method private "><a href="#_validate_attributes" title="_validate_attributes :: Make sure $attr is an array, repair line-break damage, merge with $content"><span class="description">Make sure $attr is an array, repair line-break damage, merge with $content</span><pre>_validate_attributes()</pre></a></li>
-<li class="method private "><a href="#_validate_sql_orderby" title="_validate_sql_orderby :: Translates query parameters to a valid SQL order by clause."><span class="description">Translates query parameters to a valid SQL order by clause.</span><pre>_validate_sql_orderby()</pre></a></li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties</li>
-<li class="nav-header private">» Private</li>
-<li class="property private "><a href="#%24mla_debug" title="$mla_debug :: Turn debug collection and display on or off"><span class="description">Turn debug collection and display on or off</span><pre>$mla_debug</pre></a></li>
-<li class="property private "><a href="#%24mla_get_shortcode_attachments_parameters" title="$mla_get_shortcode_attachments_parameters :: Data selection parameters for the WP_Query in [mla_gallery]"><span class="description">Data selection parameters for the WP_Query in [mla_gallery]</span><pre>$mla_get_shortcode_attachments_parameters</pre></a></li>
-<li class="property private "><a href="#%24mla_get_terms_parameters" title="$mla_get_terms_parameters :: Data selection parameters for [mla_tag_cloud], [mla_term_list]"><span class="description">Data selection parameters for [mla_tag_cloud], [mla_term_list]</span><pre>$mla_get_terms_parameters</pre></a></li>
-<li class="property private "><a href="#%24query_parameters" title='$query_parameters :: WP_Query filter "parameters"'><span class="description">WP_Query filter "parameters"</span><pre>$query_parameters</pre></a></li>
-<li class="property private "><a href="#%24term_list_item_specific_arguments" title="$term_list_item_specific_arguments :: These are the default parameters for term list display"><span class="description">These are the default parameters for term list display</span><pre>$term_list_item_specific_arguments</pre></a></li>
-</ul>
-</div>
-<div class="span8">
-<a name="%5CMLAShortcode_Support" id="\MLAShortcode_Support"></a><ul class="breadcrumb">
-<li>
-<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
-</li>
-<li><a href="../namespaces/global.html">global</a></li>
-<li class="active">
-<span class="divider">\</span><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a>
-</li>
-</ul>
-<div href="../classes/MLAShortcode_Support.html" class="element class">
-<p class="short_description">Class MLA (Media Library Assistant) Shortcode Support provides the functions that
-implement the [mla_gallery] and [mla_tag_cloud] shortcodes.</p>
-<div class="details">
-<p class="long_description"><p>It also implements the
-mla_get_shortcode_attachments() and mla_get_terms() database access functions.</p></p>
-<table class="table table-bordered">
-<tr>
-<th>package</th>
-<td><a href="../packages/Media%20Library%20Assistant.html">Media Library Assistant</a></td>
-</tr>
-<tr>
-<th>since</th>
-<td>2.20</td>
-</tr>
-</table>
-<h3>
-<i class="icon-custom icon-method"></i> Methods</h3>
-<a name="_compose_term_list" id="_compose_term_list"></a><div class="element clickable method public _compose_term_list" data-toggle="collapse" data-target="._compose_term_list .collapse">
-<h2>Compose one level of an mla_term_list</h2>
-<pre>_compose_term_list(string $list, array $links, array $terms, array $markup_values, array $arguments, array $attr) : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>Adds shortcode output text and term-specific links to arrays passed by reference.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$list</h4>
-<code>string</code><p>Shortcode output text, by reference</p></div>
-<div class="subelement argument">
-<h4>$links</h4>
-<code>array</code><p>Term-specific links for flat/array output, by reference</p>
-</div>
-<div class="subelement argument">
-<h4>$terms</h4>
-<code>array</code><p>Term objects, by reference</p></div>
-<div class="subelement argument">
-<h4>$markup_values</h4>
-<code>array</code><p>Style and list-level substitution parameters, by reference</p>
-</div>
-<div class="subelement argument">
-<h4>$arguments</h4>
-<code>array</code><p>Shortcode parameters, including defaults, by reference</p></div>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>Shortcode parameters, explicit, by reference</p></div>
-</div></div>
-</div>
-<a name="mla_gallery_shortcode" id="mla_gallery_shortcode"></a><div class="element clickable method public mla_gallery_shortcode" data-toggle="collapse" data-target=".mla_gallery_shortcode .collapse">
-<h2>The MLA Gallery shortcode.</h2>
-<pre>mla_gallery_shortcode(array $attr, string $content) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is a superset of the WordPress Gallery shortcode for displaying images on a post,
-page or custom post type. It is adapted from /wp-includes/media.php gallery_shortcode.
-Enhancements include many additional selection parameters and full taxonomy support.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>Attributes of the shortcode</p></div>
-<div class="subelement argument">
-<h4>$content</h4>
-<code>string</code><p>Optional content for enclosing shortcodes; used with mla_alt_shortcode</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>HTML content to display gallery.</div>
-</div></div>
-</div>
-<a name="mla_get_shortcode_attachments" id="mla_get_shortcode_attachments"></a><div class="element clickable method public mla_get_shortcode_attachments" data-toggle="collapse" data-target=".mla_get_shortcode_attachments .collapse">
-<h2>Parses shortcode parameters and returns the gallery objects</h2>
-<pre>mla_get_shortcode_attachments(int $post_parent, array $attr, boolean $return_found_rows) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$post_parent</h4>
-<code>int</code><p>Post ID of the parent</p></div>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>Attributes of the shortcode</p></div>
-<div class="subelement argument">
-<h4>$return_found_rows</h4>
-<code>boolean</code><p>true to calculate and return ['found_posts'] as an array element</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code>List of attachments returned from WP_Query</div>
-</div></div>
-</div>
-<a name="mla_get_terms" id="mla_get_terms"></a><div class="element clickable method public mla_get_terms" data-toggle="collapse" data-target=".mla_get_terms .collapse">
-<h2>Retrieve the terms in one or more taxonomies.</h2>
-<pre>mla_get_terms(array $attr) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>Alternative to WordPress /wp-includes/taxonomy.php function get_terms() that provides
-an accurate count of attachments associated with each term.</p>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Media Library Assistant</a>
 
-<p>taxonomy - string containing one or more (comma-delimited) taxonomy names
-or an array of taxonomy names. Default 'post_tag'.</p>
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">3</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
 
-<p>post_mime_type - MIME type(s) of the items to include in the term-specific counts. Default 'all'.</p>
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1033643538"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1033643538" class="accordion-body collapse in">
+                <div class="accordion-inner">
 
-<p>post_type - The post type(s) of the items to include in the term-specific counts.
-The default is "attachment".</p>
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CPAC_Storage_Model_MLA.html">CPAC_Storage_Model_MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA.html">MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Ajax.html">MLA_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Checklist_Walker.html">MLA_Checklist_Walker</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Example_List_Table.html">MLA_Example_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_List_Table.html">MLA_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang.html">MLA_Polylang</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Thumbnail.html">MLA_Thumbnail</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upgrader_Skin.html">MLA_Upgrader_Skin</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_List_Table.html">MLA_Upload_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_Optional_List_Table.html">MLA_Upload_Optional_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_View_List_Table.html">MLA_View_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML.html">MLA_WPML</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_List_Table.html">MLA_WPML_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Table.html">MLA_WPML_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLACore.html">MLACore</a></li>
+                                                    <li class="class"><a href="../classes/MLACoreOptions.html">MLACoreOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAData.html">MLAData</a></li>
+                                                    <li class="class"><a href="../classes/MLAData_Source.html">MLAData_Source</a></li>
+                                                    <li class="class"><a href="../classes/MLAEdit.html">MLAEdit</a></li>
+                                                    <li class="class"><a href="../classes/MLAFileDownloader.html">MLAFileDownloader</a></li>
+                                                    <li class="class"><a href="../classes/MLAImageProcessor.html">MLAImageProcessor</a></li>
+                                                    <li class="class"><a href="../classes/MLAMime.html">MLAMime</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal.html">MLAModal</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal_Ajax.html">MLAModal_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLAMutex.html">MLAMutex</a></li>
+                                                    <li class="class"><a href="../classes/MLAObjects.html">MLAObjects</a></li>
+                                                    <li class="class"><a href="../classes/MLAOptions.html">MLAOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAPDF.html">MLAPDF</a></li>
+                                                    <li class="class"><a href="../classes/MLAQuery.html">MLAQuery</a></li>
+                                                    <li class="class"><a href="../classes/MLAReferences.html">MLAReferences</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings.html">MLASettings</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcodes.html">MLAShortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLATemplate_Support.html">MLATemplate_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLATest.html">MLATest</a></li>
+                                                    <li class="class"><a href="../classes/MLATextWidget.html">MLATextWidget</a></li>
+                                                    <li class="class"><a href="../classes/MLAUninstall.html">MLAUninstall</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<p>post_status - The post status value(s) of the items to include in the term-specific counts.
-The default is "inherit".</p>
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
-<p>ids - A comma-separated list of attachment ID values for an item-specific cloud.</p>
+                    <h1><small>\</small>MLAShortcode_Support</h1>
+                    <p><em>Class MLA (Media Library Assistant) Shortcode Support provides the functions that
+implement the [mla_gallery] and [mla_tag_cloud] shortcodes. It also implements the
+mla_get_shortcode_attachments() and mla_get_terms() database access functions.</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_ghostscript_present" class="">mla_ghostscript_present()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_gallery_shortcode" class="">mla_gallery_shortcode()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_tag_cloud" class="">mla_tag_cloud()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_tag_cloud_shortcode" class="">mla_tag_cloud_shortcode()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__compose_term_list" class="">_compose_term_list()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_term_list" class="">mla_term_list()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_term_list_shortcode" class="">mla_term_list_shortcode()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_get_shortcode_attachments" class="">mla_get_shortcode_attachments()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_shortcode_query_posts_join_filter" class="">mla_shortcode_query_posts_join_filter()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_shortcode_query_posts_where_filter" class="">mla_shortcode_query_posts_where_filter()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_shortcode_query_posts_orderby_filter" class="">mla_shortcode_query_posts_orderby_filter()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_shortcode_query_posts_clauses_filter" class="">mla_shortcode_query_posts_clauses_filter()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_shortcode_query_posts_clauses_request_filter" class="">mla_shortcode_query_posts_clauses_request_filter()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method_mla_get_terms" class="">mla_get_terms()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__validate_attributes" class="">_validate_attributes()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__registered_dimensions" class="">_registered_dimensions()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__process_shortcode_parameter" class="">_process_shortcode_parameter()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__paginate_links" class="">_paginate_links()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__process_pagination_output_types" class="">_process_pagination_output_types()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__sanitize_query_specification" class="">_sanitize_query_specification()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__validate_sql_orderby" class="">_validate_sql_orderby()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__get_term_tree" class="">_get_term_tree()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__find_child_of" class="">_find_child_of()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__find_include_tree" class="">_find_include_tree()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__remove_exclude_tree" class="">_remove_exclude_tree()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__count_term_children" class="">_count_term_children()</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#method__pad_term_counts" class="">_pad_term_counts()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLAShortcode_Support.html#property_mla_debug" class="">$mla_debug</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#property_term_list_item_specific_arguments" class="">$term_list_item_specific_arguments</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#property_query_parameters" class="">$query_parameters</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#property_mla_get_shortcode_attachments_parameters" class="">$mla_get_shortcode_attachments_parameters</a><br />
+                                                                    <a href="../classes/MLAShortcode_Support.html#property_mla_get_terms_parameters" class="">$mla_get_terms_parameters</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes.class-mla-shortcode-support.html"><div class="path-wrapper">includes\class-mla-shortcode-support.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Media Library Assistant</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MLAShortcode_Support</div>
+                            </dd>
 
-<p>include - An array, comma- or space-delimited string of term ids to include
-in the return array.</p>
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
 
-<p>exclude - An array, comma- or space-delimited string of term ids to exclude
-from the return array. If 'include' is non-empty, 'exclude' is ignored.</p>
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
 
-<p>parent - term_id of the terms' immediate parent; 0 for top-level terms.</p>
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_debug" name="property_mla_debug" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_debug</h3>
+                <pre class="signature">$mla_debug : boolean</pre>
+                <p><em>Turn debug collection and display on or off</em></p>
+                
 
-<p>minimum - minimum number of attachments a term must have to be included. Default 0.</p>
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
 
-<p>no_count - 'true', 'false' (default) to suppress term-specific attachment-counting process.</p>
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_term_list_item_specific_arguments" name="property_term_list_item_specific_arguments" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$term_list_item_specific_arguments</h3>
+                <pre class="signature">$term_list_item_specific_arguments : array</pre>
+                <p><em>These are the default parameters for term list display</em></p>
+                
 
-<p>number - maximum number of term objects to return. Terms are ordered by count,
-descending and then by term_id before this value is applied. Default 0.</p>
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
 
-<p>orderby - 'count', 'id', 'name' (default), 'none', 'random', 'slug'</p>
-
-<p>order - 'ASC' (default), 'DESC'</p>
-
-<p>no_orderby - 'true', 'false' (default) to suppress ALL sorting clauses else false.</p>
-
-<p>preserve_case - 'true', 'false' (default) to make orderby case-sensitive.</p>
-
-<p>pad_counts - 'true', 'false' (default) to to include the count of all children in their parents' count.</p>
-
-<p>limit - final number of term objects to return, for pagination. Default 0.</p>
-
-<p>offset - number of term objects to skip, for pagination. Default 0.</p>
-
-<p>fields - string with fields for the SQL SELECT clause, e.g.,
-         't.term_id, t.name, t.slug, COUNT(p.ID) AS <code>count</code>'</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>taxonomies to search and query parameters</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code>array of term objects, empty if none found</div>
-</div></div>
-</div>
-<a name="mla_ghostscript_present" id="mla_ghostscript_present"></a><div class="element clickable method public mla_ghostscript_present" data-toggle="collapse" data-target=".mla_ghostscript_present .collapse">
-<h2>Verify the presence of Ghostscript for mla_viewer</h2>
-<pre>mla_ghostscript_present(string $explicit_path, boolean $ghostscript_only) : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$explicit_path</h4>
-<code>string</code><p>Non-standard location to override default search, e.g., 'C:\Program Files (x86)\gs\gs9.15\bin\gswin32c.exe'</p>
-</div>
-<div class="subelement argument">
-<h4>$ghostscript_only</h4>
-<code>boolean</code><p>Force ghostscript-only tests, used by MLASettings::_compose_mla_gallery_tab()</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>boolean</code>true if Ghostscript available else false</div>
-</div></div>
-</div>
-<a name="mla_shortcode_query_posts_clauses_filter" id="mla_shortcode_query_posts_clauses_filter"></a><div class="element clickable method public mla_shortcode_query_posts_clauses_filter" data-toggle="collapse" data-target=".mla_shortcode_query_posts_clauses_filter .collapse">
-<h2>Filters all clauses for shortcode queries, pre caching plugins</h2>
-<pre>mla_shortcode_query_posts_clauses_filter(array $pieces) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is for debug purposes only.
-Defined as public because it's a filter.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$pieces</h4>
-<code>array</code><p>query clauses before modification</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code>query clauses after modification (none)</div>
-</div></div>
-</div>
-<a name="mla_shortcode_query_posts_clauses_request_filter" id="mla_shortcode_query_posts_clauses_request_filter"></a><div class="element clickable method public mla_shortcode_query_posts_clauses_request_filter" data-toggle="collapse" data-target=".mla_shortcode_query_posts_clauses_request_filter .collapse">
-<h2>Filters all clauses for shortcode queries, post caching plugins</h2>
-<pre>mla_shortcode_query_posts_clauses_request_filter(array $pieces) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is for debug purposes only.
-Defined as public because it's a filter.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$pieces</h4>
-<code>array</code><p>query clauses before modification</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code>query clauses after modification (none)</div>
-</div></div>
-</div>
-<a name="mla_shortcode_query_posts_join_filter" id="mla_shortcode_query_posts_join_filter"></a><div class="element clickable method public mla_shortcode_query_posts_join_filter" data-toggle="collapse" data-target=".mla_shortcode_query_posts_join_filter .collapse">
-<h2>Filters the JOIN clause for shortcode queries</h2>
-<pre>mla_shortcode_query_posts_join_filter(string $join_clause) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>Defined as public because it's a filter.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$join_clause</h4>
-<code>string</code><p>query clause before modification</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>query clause after item modification</div>
-</div></div>
-</div>
-<a name="mla_shortcode_query_posts_orderby_filter" id="mla_shortcode_query_posts_orderby_filter"></a><div class="element clickable method public mla_shortcode_query_posts_orderby_filter" data-toggle="collapse" data-target=".mla_shortcode_query_posts_orderby_filter .collapse">
-<h2>Filters the ORDERBY clause for shortcode queries</h2>
-<pre>mla_shortcode_query_posts_orderby_filter(string $orderby_clause) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is an enhanced version of the code found in wp-includes/query.php, function get_posts.
-Defined as public because it's a filter.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$orderby_clause</h4>
-<code>string</code><p>query clause before modification</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>query clause after modification</div>
-</div></div>
-</div>
-<a name="mla_shortcode_query_posts_where_filter" id="mla_shortcode_query_posts_where_filter"></a><div class="element clickable method public mla_shortcode_query_posts_where_filter" data-toggle="collapse" data-target=".mla_shortcode_query_posts_where_filter .collapse">
-<h2>Filters the WHERE clause for shortcode queries</h2>
-<pre>mla_shortcode_query_posts_where_filter(string $where_clause) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>Captures debug information. Adds whitespace to the post_type = 'attachment'
-phrase to circumvent subsequent Role Scoper modification of the clause.
-Handles post_parent "any" and "none" cases.
-Defined as public because it's a filter.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$where_clause</h4>
-<code>string</code><p>query clause before modification</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>query clause after modification</div>
-</div></div>
-</div>
-<a name="mla_tag_cloud" id="mla_tag_cloud"></a><div class="element clickable method public mla_tag_cloud" data-toggle="collapse" data-target=".mla_tag_cloud .collapse">
-<h2>The MLA Tag Cloud support function.</h2>
-<pre>mla_tag_cloud(array $attr) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is an alternative to the WordPress wp_tag_cloud function, with additional
-options to customize the hyperlink behind each term.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>Attributes of the shortcode.</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>HTML content to display the tag cloud.</div>
-</div></div>
-</div>
-<a name="mla_tag_cloud_shortcode" id="mla_tag_cloud_shortcode"></a><div class="element clickable method public mla_tag_cloud_shortcode" data-toggle="collapse" data-target=".mla_tag_cloud_shortcode .collapse">
-<h2>The MLA Tag Cloud shortcode.</h2>
-<pre>mla_tag_cloud_shortcode(array $attr, string $content) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is an interface to the mla_tag_cloud function.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>Attributes of the shortcode.</p></div>
-<div class="subelement argument">
-<h4>$content</h4>
-<code>string</code><p>Optional content for enclosing shortcodes</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>HTML content to display the tag cloud.</div>
-</div></div>
-</div>
-<a name="mla_term_list" id="mla_term_list"></a><div class="element clickable method public mla_term_list" data-toggle="collapse" data-target=".mla_term_list .collapse">
-<h2>The MLA Term List support function.</h2>
-<pre>mla_term_list(array $attr) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is an alternative to the WordPress wp_list_categories, wp_dropdown_categories
-and wp_terms_checklist functions, with additional options to customize the hyperlink
-behind each term.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>Attributes of the shortcode.</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>HTML content to display the term list, dropdown control or checklist.</div>
-</div></div>
-</div>
-<a name="mla_term_list_shortcode" id="mla_term_list_shortcode"></a><div class="element clickable method public mla_term_list_shortcode" data-toggle="collapse" data-target=".mla_term_list_shortcode .collapse">
-<h2>The MLA Term List shortcode.</h2>
-<pre>mla_term_list_shortcode(array $attr, string $content) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This is an interface to the mla_term_list function.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>array</code><p>Attributes of the shortcode.</p></div>
-<div class="subelement argument">
-<h4>$content</h4>
-<code>string</code><p>Optional content for enclosing shortcodes</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>HTML content to display the term list.</div>
-</div></div>
-</div>
-<a name="_count_term_children" id="_count_term_children"></a><div class="element clickable method private _count_term_children" data-toggle="collapse" data-target="._count_term_children .collapse">
-<h2>Add level to term children and count them, all levels.</h2>
-<pre>_count_term_children(object $parent, integer $depth) : integer</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>Recalculates term counts by including items from child terms. Assumes all
-relevant children are already in the $terms argument.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$parent</h4>
-<code>object</code><p>Parent Term objects, by reference</p></div>
-<div class="subelement argument">
-<h4>$depth</h4>
-<code>integer</code><p>Maximum depth of parent/child relationship</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>integer</code>Total number of children, all levels</div>
-</div></div>
-</div>
-<a name="_find_child_of" id="_find_child_of"></a><div class="element clickable method private _find_child_of" data-toggle="collapse" data-target="._find_child_of .collapse">
-<h2>Find a term that matches $child_of</h2>
-<pre>_find_child_of(array $parents, integer $parent_id) : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$parents</h4>
-<code>array</code><p>Potential parent Term objects, by reference</p></div>
-<div class="subelement argument">
-<h4>$parent_id</h4>
-<code>integer</code><p>Term_id of the desired parent</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>mixed</code>Term object of the desired parent else false</div>
-</div></div>
-</div>
-<a name="_find_include_tree" id="_find_include_tree"></a><div class="element clickable method private _find_include_tree" data-toggle="collapse" data-target="._find_include_tree .collapse">
-<h2>Find the term(s) that match $include_tree</h2>
-<pre>_find_include_tree(array $terms, array $include_tree) : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$terms</h4>
-<code>array</code><p>Potential term objects, by reference</p></div>
-<div class="subelement argument">
-<h4>$include_tree</h4>
-<code>array</code><p>term_id(s) of the desired terms</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>mixed</code>Term object(s) of the desired terms else false</div>
-</div></div>
-</div>
-<a name="_get_term_tree" id="_get_term_tree"></a><div class="element clickable method private _get_term_tree" data-toggle="collapse" data-target="._get_term_tree .collapse">
-<h2>Walk a list of terms and find hierarchy, preserving source order.</h2>
-<pre>_get_term_tree(array $terms, array $arguments) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$terms</h4>
-<code>array</code><p>Term objects, by reference</p></div>
-<div class="subelement argument">
-<h4>$arguments</h4>
-<code>array</code><p>Shortcode arguments, including defaults</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code>( [taxonomy] => array( [root terms] => array( [fields], array( 'children' => [child terms] )</div>
-</div></div>
-</div>
-<a name="_pad_term_counts" id="_pad_term_counts"></a><div class="element clickable method private _pad_term_counts" data-toggle="collapse" data-target="._pad_term_counts .collapse">
-<h2>Add count of children to parent count.</h2>
-<pre>_pad_term_counts(array $terms, string $taxonomy, array $post_types, array $post_stati) : null</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>Recalculates term counts by including items from child terms. Assumes all
-relevant children are already in the $terms argument.</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$terms</h4>
-<code>array</code><p>Array of Term objects, by reference</p></div>
-<div class="subelement argument">
-<h4>$taxonomy</h4>
-<code>string</code><p>Term Context</p></div>
-<div class="subelement argument">
-<h4>$post_types</h4>
-<code>array</code><p>Qualifying post type value(s)</p>
-</div>
-<div class="subelement argument">
-<h4>$post_stati</h4>
-<code>array</code><p>Qualifying post status value(s)</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>null</code>Will break from function if conditions are not met.</div>
-</div></div>
-</div>
-<a name="_paginate_links" id="_paginate_links"></a><div class="element clickable method private _paginate_links" data-toggle="collapse" data-target="._paginate_links .collapse">
-<h2>Handles pagnation output types 'previous_page', 'next_page', and 'paginate_links'</h2>
-<pre>_paginate_links(array $output_parameters, string $markup_values, string $arguments, integer $found_rows, string $output) : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$output_parameters</h4>
-<code>array</code><p>value(s) for mla_output_type parameter</p>
-</div>
-<div class="subelement argument">
-<h4>$markup_values</h4>
-<code>string</code><p>template substitution values, e.g., ('instance' => '1', ... )</p>
-</div>
-<div class="subelement argument">
-<h4>$arguments</h4>
-<code>string</code><p>merged default and passed shortcode parameter values</p></div>
-<div class="subelement argument">
-<h4>$found_rows</h4>
-<code>integer</code><p>number of attachments in the gallery, without pagination</p></div>
-<div class="subelement argument">
-<h4>$output</h4>
-<code>string</code><p>output text so far, may include debug values</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>mixed</code>false or string with HTML for pagination output types</div>
-</div></div>
-</div>
-<a name="_process_pagination_output_types" id="_process_pagination_output_types"></a><div class="element clickable method private _process_pagination_output_types" data-toggle="collapse" data-target="._process_pagination_output_types .collapse">
-<h2>Handles pagnation output types 'previous_page', 'next_page', and 'paginate_links'</h2>
-<pre>_process_pagination_output_types(array $output_parameters, string $markup_values, string $arguments, string $attr, integer $found_rows, string $output) : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$output_parameters</h4>
-<code>array</code><p>value(s) for mla_output_type parameter</p>
-</div>
-<div class="subelement argument">
-<h4>$markup_values</h4>
-<code>string</code><p>template substitution values, e.g., ('instance' => '1', ... )</p>
-</div>
-<div class="subelement argument">
-<h4>$arguments</h4>
-<code>string</code><p>merged default and passed shortcode parameter values</p></div>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>string</code><p>raw passed shortcode parameter values</p></div>
-<div class="subelement argument">
-<h4>$found_rows</h4>
-<code>integer</code><p>number of attachments in the gallery, without pagination</p></div>
-<div class="subelement argument">
-<h4>$output</h4>
-<code>string</code><p>output text so far, may include debug values</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>mixed</code>false or string with HTML for pagination output types</div>
-</div></div>
-</div>
-<a name="_process_shortcode_parameter" id="_process_shortcode_parameter"></a><div class="element clickable method private _process_shortcode_parameter" data-toggle="collapse" data-target="._process_shortcode_parameter .collapse">
-<h2>Handles brace/bracket escaping and parses template for a shortcode parameter</h2>
-<pre>_process_shortcode_parameter(string $text, string $markup_values) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$text</h4>
-<code>string</code><p>raw shortcode parameter, e.g., "text {+field+} {brackets} \{braces\}"</p>
-</div>
-<div class="subelement argument">
-<h4>$markup_values</h4>
-<code>string</code><p>template substitution values, e.g., ('instance' => '1', ... )</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>parameter with brackets, braces, substitution parameters and templates processed</div>
-</div></div>
-</div>
-<a name="_registered_dimensions" id="_registered_dimensions"></a><div class="element clickable method private _registered_dimensions" data-toggle="collapse" data-target="._registered_dimensions .collapse">
-<h2>Computes image dimensions for scalable graphics, e.g., SVG</h2>
-<pre>_registered_dimensions() : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Returns</h3>
-<div class="subelement response"><code>array</code></div>
-</div></div>
-</div>
-<a name="_remove_exclude_tree" id="_remove_exclude_tree"></a><div class="element clickable method private _remove_exclude_tree" data-toggle="collapse" data-target="._remove_exclude_tree .collapse">
-<h2>Remove the term(s) that match $exclude_tree</h2>
-<pre>_remove_exclude_tree(array $terms, array $exclude_tree) : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.25</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$terms</h4>
-<code>array</code><p>Potential term objects, by reference</p></div>
-<div class="subelement argument">
-<h4>$exclude_tree</h4>
-<code>array</code><p>term_id(s) of the desired terms</p>
-</div>
-</div></div>
-</div>
-<a name="_sanitize_query_specification" id="_sanitize_query_specification"></a><div class="element clickable method private _sanitize_query_specification" data-toggle="collapse" data-target="._sanitize_query_specification .collapse">
-<h2>Cleans up damage caused by the Visual Editor to the tax_query and meta_query specifications</h2>
-<pre>_sanitize_query_specification(string $specification) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$specification</h4>
-<code>string</code><p>query specification; PHP nested arrays</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code>query specification with HTML escape sequences and line breaks removed</div>
-</div></div>
-</div>
-<a name="_validate_attributes" id="_validate_attributes"></a><div class="element clickable method private _validate_attributes" data-toggle="collapse" data-target="._validate_attributes .collapse">
-<h2>Make sure $attr is an array, repair line-break damage, merge with $content</h2>
-<pre>_validate_attributes(mixed $attr, string $content) : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$attr</h4>
-<code>mixed</code><p>Array or string containing shortcode attributes</p></div>
-<div class="subelement argument">
-<h4>$content</h4>
-<code>string</code><p>Optional content for enclosing shortcodes; might be used with mla_alt_shortcode</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>array</code>clean attributes array</div>
-</div></div>
-</div>
-<a name="_validate_sql_orderby" id="_validate_sql_orderby"></a><div class="element clickable method private _validate_sql_orderby" data-toggle="collapse" data-target="._validate_sql_orderby .collapse">
-<h2>Translates query parameters to a valid SQL order by clause.</h2>
-<pre>_validate_sql_orderby(array $query_parameters, string $table_prefix, array $allowed_keys, array $binary_keys) : string | bool</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>Accepts one or more valid columns, with or without ASC/DESC.
-Enhanced version of /wp-includes/formatting.php function sanitize_sql_orderby().</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$query_parameters</h4>
-<code>array</code><p>Validated query parameters; 'order', 'orderby', 'meta_key', 'post__in'.</p>
-</div>
-<div class="subelement argument">
-<h4>$table_prefix</h4>
-<code>string</code><p>Optional. Database table prefix; can be empty. Default taken from $wpdb->posts.</p>
-</div>
-<div class="subelement argument">
-<h4>$allowed_keys</h4>
-<code>array</code><p>Optional. Field names (keys) and database column equivalents (values). Defaults from [mla_gallery].</p>
-</div>
-<div class="subelement argument">
-<h4>$binary_keys</h4>
-<code>array</code><p>Optional. Field names (values) that require a BINARY prefix to preserve case order. Default array()</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code>string</code><code>bool</code>Returns the orderby clause if present, false otherwise.</div>
-</div></div>
-</div>
-<h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a name="%24mla_debug" id="$mla_debug"> </a><div class="element clickable property private $mla_debug" data-toggle="collapse" data-target=".$mla_debug .collapse">
-<h2>Turn debug collection and display on or off</h2>
-<pre>$mla_debug : boolean</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-</div></div>
-</div>
-<a name="%24mla_get_shortcode_attachments_parameters" id="$mla_get_shortcode_attachments_parameters"> </a><div class="element clickable property private $mla_get_shortcode_attachments_parameters" data-toggle="collapse" data-target=".$mla_get_shortcode_attachments_parameters .collapse">
-<h2>Data selection parameters for the WP_Query in [mla_gallery]</h2>
-<pre>$mla_get_shortcode_attachments_parameters : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-</div></div>
-</div>
-<a name="%24mla_get_terms_parameters" id="$mla_get_terms_parameters"> </a><div class="element clickable property private $mla_get_terms_parameters" data-toggle="collapse" data-target=".$mla_get_terms_parameters .collapse">
-<h2>Data selection parameters for [mla_tag_cloud], [mla_term_list]</h2>
-<pre>$mla_get_terms_parameters : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-</div></div>
-</div>
-<a name="%24query_parameters" id="$query_parameters"> </a><div class="element clickable property private $query_parameters" data-toggle="collapse" data-target=".$query_parameters .collapse">
-<h2>WP_Query filter "parameters"</h2>
-<pre>$query_parameters : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"><p>This array defines parameters for the query's join, where and orderby filters.
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_query_parameters" name="property_query_parameters" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$query_parameters</h3>
+                <pre class="signature">$query_parameters : array</pre>
+                <p><em>WP_Query filter &quot;parameters&quot;</em></p>
+                <p>This array defines parameters for the query's join, where and orderby filters.
 The parameters are set up in the mla_get_shortcode_attachments function, and
 any further logic required to translate those values is contained in the filter.</p>
+<p>Array index values are: orderby, post_parent</p>
 
-<p>Array index values are: orderby, post_parent</p></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.20</td>
-</tr></table>
-</div></div>
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_get_shortcode_attachments_parameters" name="property_mla_get_shortcode_attachments_parameters" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_get_shortcode_attachments_parameters</h3>
+                <pre class="signature">$mla_get_shortcode_attachments_parameters : array</pre>
+                <p><em>Data selection parameters for the WP_Query in [mla_gallery]</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_get_terms_parameters" name="property_mla_get_terms_parameters" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_get_terms_parameters</h3>
+                <pre class="signature">$mla_get_terms_parameters : array</pre>
+                <p><em>Data selection parameters for [mla_tag_cloud], [mla_term_list]</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_ghostscript_present" name="method_mla_ghostscript_present" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_ghostscript_present()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_ghostscript_present(  <span class="argument">$explicit_path = &#039;&#039;</span>,   <span class="argument">$ghostscript_only = false</span>) : boolean</pre>
+                <p><em>Verify the presence of Ghostscript for mla_viewer</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$explicit_path </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$ghostscript_only </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if Ghostscript available else false</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_gallery_shortcode" name="method_mla_gallery_shortcode" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_gallery_shortcode()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_gallery_shortcode(array  <span class="argument">$attr</span>, string  <span class="argument">$content = NULL</span>) : string</pre>
+                <p><em>The MLA Gallery shortcode.</em></p>
+                <p>This is a superset of the WordPress Gallery shortcode for displaying images on a post,
+page or custom post type. It is adapted from /wp-includes/media.php gallery_shortcode.
+Enhancements include many additional selection parameters and full taxonomy support.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attr </td>
+                                <td><p>Attributes of the shortcode</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$content </td>
+                                <td><p>Optional content for enclosing shortcodes; used with mla_alt_shortcode</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML content to display gallery.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_tag_cloud" name="method_mla_tag_cloud" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_tag_cloud()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_tag_cloud(array  <span class="argument">$attr</span>) : string</pre>
+                <p><em>The MLA Tag Cloud support function.</em></p>
+                <p>This is an alternative to the WordPress wp_tag_cloud function, with additional
+options to customize the hyperlink behind each term.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attr </td>
+                                <td><p>Attributes of the shortcode.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML content to display the tag cloud.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_tag_cloud_shortcode" name="method_mla_tag_cloud_shortcode" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_tag_cloud_shortcode()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_tag_cloud_shortcode(array  <span class="argument">$attr</span>, string  <span class="argument">$content = NULL</span>) : string</pre>
+                <p><em>The MLA Tag Cloud shortcode.</em></p>
+                <p>This is an interface to the mla_tag_cloud function.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attr </td>
+                                <td><p>Attributes of the shortcode.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$content </td>
+                                <td><p>Optional content for enclosing shortcodes</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML content to display the tag cloud.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__compose_term_list" name="method__compose_term_list" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">_compose_term_list()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_compose_term_list(string  <span class="argument">$list</span>, array  <span class="argument">$links</span>, array  <span class="argument">$terms</span>, array  <span class="argument">$markup_values</span>, array  <span class="argument">$arguments</span>, array  <span class="argument">$attr</span>) : void</pre>
+                <p><em>Compose one level of an mla_term_list</em></p>
+                <p>Adds shortcode output text and term-specific links to arrays passed by reference.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$list </td>
+                                <td><p>Shortcode output text, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$links </td>
+                                <td><p>Term-specific links for flat/array output, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$terms </td>
+                                <td><p>Term objects, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$markup_values </td>
+                                <td><p>Style and list-level substitution parameters, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$arguments </td>
+                                <td><p>Shortcode parameters, including defaults, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attr </td>
+                                <td><p>Shortcode parameters, explicit, by reference</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_term_list" name="method_mla_term_list" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_term_list()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_term_list(array  <span class="argument">$attr</span>) : string</pre>
+                <p><em>The MLA Term List support function.</em></p>
+                <p>This is an alternative to the WordPress wp_list_categories, wp_dropdown_categories
+and wp_terms_checklist functions, with additional options to customize the hyperlink
+behind each term.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attr </td>
+                                <td><p>Attributes of the shortcode.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML content to display the term list, dropdown control or checklist.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_term_list_shortcode" name="method_mla_term_list_shortcode" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_term_list_shortcode()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_term_list_shortcode(array  <span class="argument">$attr</span>, string  <span class="argument">$content = NULL</span>) : string</pre>
+                <p><em>The MLA Term List shortcode.</em></p>
+                <p>This is an interface to the mla_term_list function.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attr </td>
+                                <td><p>Attributes of the shortcode.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$content </td>
+                                <td><p>Optional content for enclosing shortcodes</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML content to display the term list.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_shortcode_attachments" name="method_mla_get_shortcode_attachments" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_shortcode_attachments()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_shortcode_attachments(  <span class="argument">$post_parent</span>,   <span class="argument">$attr</span>,   <span class="argument">$return_found_rows = NULL</span>) : array</pre>
+                <p><em>Parses shortcode parameters and returns the gallery objects</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_parent </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$attr </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$return_found_rows </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>List of attachments returned from WP_Query</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_shortcode_query_posts_join_filter" name="method_mla_shortcode_query_posts_join_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_shortcode_query_posts_join_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_shortcode_query_posts_join_filter(  <span class="argument">$join_clause</span>) : string</pre>
+                <p><em>Filters the JOIN clause for shortcode queries</em></p>
+                <p>Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$join_clause </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>query clause after item modification</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_shortcode_query_posts_where_filter" name="method_mla_shortcode_query_posts_where_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_shortcode_query_posts_where_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_shortcode_query_posts_where_filter(  <span class="argument">$where_clause</span>) : string</pre>
+                <p><em>Filters the WHERE clause for shortcode queries</em></p>
+                <p>Captures debug information. Adds whitespace to the post_type = 'attachment'
+phrase to circumvent subsequent Role Scoper modification of the clause.
+Handles post_parent &quot;any&quot; and &quot;none&quot; cases.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$where_clause </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>query clause after modification</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_shortcode_query_posts_orderby_filter" name="method_mla_shortcode_query_posts_orderby_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_shortcode_query_posts_orderby_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_shortcode_query_posts_orderby_filter(  <span class="argument">$orderby_clause</span>) : string</pre>
+                <p><em>Filters the ORDERBY clause for shortcode queries</em></p>
+                <p>This is an enhanced version of the code found in wp-includes/query.php, function get_posts.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$orderby_clause </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>query clause after modification</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_shortcode_query_posts_clauses_filter" name="method_mla_shortcode_query_posts_clauses_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_shortcode_query_posts_clauses_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_shortcode_query_posts_clauses_filter(  <span class="argument">$pieces</span>) : array</pre>
+                <p><em>Filters all clauses for shortcode queries, pre caching plugins</em></p>
+                <p>This is for debug purposes only.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$pieces </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>query clauses after modification (none)</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_shortcode_query_posts_clauses_request_filter" name="method_mla_shortcode_query_posts_clauses_request_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_shortcode_query_posts_clauses_request_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_shortcode_query_posts_clauses_request_filter(  <span class="argument">$pieces</span>) : array</pre>
+                <p><em>Filters all clauses for shortcode queries, post caching plugins</em></p>
+                <p>This is for debug purposes only.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$pieces </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>query clauses after modification (none)</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_terms" name="method_mla_get_terms" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_terms()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_terms(  <span class="argument">$attr</span>) : array</pre>
+                <p><em>Retrieve the terms in one or more taxonomies.</em></p>
+                <p>Alternative to WordPress /wp-includes/taxonomy.php function get_terms() that provides
+an accurate count of attachments associated with each term.</p>
+<p>taxonomy - string containing one or more (comma-delimited) taxonomy names
+or an array of taxonomy names. Default 'post_tag'.</p>
+<p>post_mime_type - MIME type(s) of the items to include in the term-specific counts. Default 'all'.</p>
+<p>post_type - The post type(s) of the items to include in the term-specific counts.
+The default is &quot;attachment&quot;.</p>
+<p>post_status - The post status value(s) of the items to include in the term-specific counts.
+The default is &quot;inherit&quot;.</p>
+<p>ids - A comma-separated list of attachment ID values for an item-specific cloud.</p>
+<p>include - An array, comma- or space-delimited string of term ids to include
+in the return array.</p>
+<p>exclude - An array, comma- or space-delimited string of term ids to exclude
+from the return array. If 'include' is non-empty, 'exclude' is ignored.</p>
+<p>parent - term_id of the terms' immediate parent; 0 for top-level terms.</p>
+<p>minimum - minimum number of attachments a term must have to be included. Default 0.</p>
+<p>no_count - 'true', 'false' (default) to suppress term-specific attachment-counting process.</p>
+<p>number - maximum number of term objects to return. Terms are ordered by count,
+descending and then by term_id before this value is applied. Default 0.</p>
+<p>orderby - 'count', 'id', 'name' (default), 'none', 'random', 'slug'</p>
+<p>order - 'ASC' (default), 'DESC'</p>
+<p>no_orderby - 'true', 'false' (default) to suppress ALL sorting clauses else false.</p>
+<p>preserve_case - 'true', 'false' (default) to make orderby case-sensitive.</p>
+<p>pad_counts - 'true', 'false' (default) to to include the count of all children in their parents' count.</p>
+<p>limit - final number of term objects to return, for pagination. Default 0.</p>
+<p>offset - number of term objects to skip, for pagination. Default 0.</p>
+<p>fields - string with fields for the SQL SELECT clause, e.g.,
+'t.term_id, t.name, t.slug, COUNT(p.ID) AS <code>count</code>'</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$attr </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>array of term objects, empty if none found</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__validate_attributes" name="method__validate_attributes" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_validate_attributes()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_validate_attributes(mixed  <span class="argument">$attr</span>, string  <span class="argument">$content = NULL</span>) : array</pre>
+                <p><em>Make sure $attr is an array, repair line-break damage, merge with $content</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$attr </td>
+                                <td><p>Array or string containing shortcode attributes</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$content </td>
+                                <td><p>Optional content for enclosing shortcodes; might be used with mla_alt_shortcode</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>clean attributes array</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__registered_dimensions" name="method__registered_dimensions" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_registered_dimensions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_registered_dimensions() : array</pre>
+                <p><em>Computes image dimensions for scalable graphics, e.g., SVG</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__process_shortcode_parameter" name="method__process_shortcode_parameter" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_process_shortcode_parameter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_process_shortcode_parameter(  <span class="argument">$text</span>,   <span class="argument">$markup_values</span>) : string</pre>
+                <p><em>Handles brace/bracket escaping and parses template for a shortcode parameter</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$text </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>parameter with brackets, braces, substitution parameters and templates processed</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__paginate_links" name="method__paginate_links" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_paginate_links()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_paginate_links(  <span class="argument">$output_parameters</span>,   <span class="argument">$markup_values</span>,   <span class="argument">$arguments</span>,   <span class="argument">$found_rows</span>,   <span class="argument">$output = &#039;&#039;</span>) : mixed</pre>
+                <p><em>Handles pagnation output types &#039;previous_page&#039;, &#039;next_page&#039;, and &#039;paginate_links&#039;</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$output_parameters </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$arguments </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$found_rows </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$output </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>false or string with HTML for pagination output types</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__process_pagination_output_types" name="method__process_pagination_output_types" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_process_pagination_output_types()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_process_pagination_output_types(  <span class="argument">$output_parameters</span>,   <span class="argument">$markup_values</span>,   <span class="argument">$arguments</span>,   <span class="argument">$attr</span>,   <span class="argument">$found_rows</span>,   <span class="argument">$output = &#039;&#039;</span>) : mixed</pre>
+                <p><em>Handles pagnation output types &#039;previous_page&#039;, &#039;next_page&#039;, and &#039;paginate_links&#039;</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$output_parameters </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$arguments </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$attr </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$found_rows </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$output </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>false or string with HTML for pagination output types</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__sanitize_query_specification" name="method__sanitize_query_specification" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_sanitize_query_specification()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_sanitize_query_specification(  <span class="argument">$specification</span>) : string</pre>
+                <p><em>Cleans up damage caused by the Visual Editor to the tax_query and meta_query specifications</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$specification </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>query specification with HTML escape sequences and line breaks removed</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__validate_sql_orderby" name="method__validate_sql_orderby" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_validate_sql_orderby()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_validate_sql_orderby(  <span class="argument">$query_parameters</span>,   <span class="argument">$table_prefix = NULL</span>,   <span class="argument">$allowed_keys = NULL</span>,   <span class="argument">$binary_keys = array()</span>) : string|boolean</pre>
+                <p><em>Translates query parameters to a valid SQL order by clause.</em></p>
+                <p>Accepts one or more valid columns, with or without ASC/DESC.
+Enhanced version of /wp-includes/formatting.php function sanitize_sql_orderby().</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$query_parameters </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$table_prefix </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$allowed_keys </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$binary_keys </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string|boolean
+                                            &mdash; <p>Returns the orderby clause if present, false otherwise.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__get_term_tree" name="method__get_term_tree" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_get_term_tree()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_get_term_tree(array  <span class="argument">$terms</span>, array  <span class="argument">$arguments = array()</span>) : array</pre>
+                <p><em>Walk a list of terms and find hierarchy, preserving source order.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$terms </td>
+                                <td><p>Term objects, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$arguments </td>
+                                <td><p>Shortcode arguments, including defaults</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( [taxonomy] =&gt; array( [root terms] =&gt; array( [fields], array( 'children' =&gt; [child terms] )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__find_child_of" name="method__find_child_of" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_find_child_of()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_find_child_of(array  <span class="argument">$parents</span>, integer  <span class="argument">$parent_id</span>) : mixed</pre>
+                <p><em>Find a term that matches $child_of</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$parents </td>
+                                <td><p>Potential parent Term objects, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$parent_id </td>
+                                <td><p>Term_id of the desired parent</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>Term object of the desired parent else false</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__find_include_tree" name="method__find_include_tree" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_find_include_tree()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_find_include_tree(array  <span class="argument">$terms</span>, array  <span class="argument">$include_tree</span>) : mixed</pre>
+                <p><em>Find the term(s) that match $include_tree</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$terms </td>
+                                <td><p>Potential term objects, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$include_tree </td>
+                                <td><p>term_id(s) of the desired terms</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>Term object(s) of the desired terms else false</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__remove_exclude_tree" name="method__remove_exclude_tree" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_remove_exclude_tree()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_remove_exclude_tree(array  <span class="argument">$terms</span>, array  <span class="argument">$exclude_tree</span>) : void</pre>
+                <p><em>Remove the term(s) that match $exclude_tree</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$terms </td>
+                                <td><p>Potential term objects, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$exclude_tree </td>
+                                <td><p>term_id(s) of the desired terms</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__count_term_children" name="method__count_term_children" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_count_term_children()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_count_term_children(object  <span class="argument">$parent</span>, integer  <span class="argument">$depth</span>) : integer</pre>
+                <p><em>Add level to term children and count them, all levels.</em></p>
+                <p>Recalculates term counts by including items from child terms. Assumes all
+relevant children are already in the $terms argument.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>object</td>
+                                <td>$parent </td>
+                                <td><p>Parent Term objects, by reference</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$depth </td>
+                                <td><p>Maximum depth of parent/child relationship</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>Total number of children, all levels</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__pad_term_counts" name="method__pad_term_counts" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_pad_term_counts()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_pad_term_counts(  <span class="argument">$terms</span>,   <span class="argument">$taxonomy</span>,   <span class="argument">$post_types = NULL</span>,   <span class="argument">$post_stati = NULL</span>) : null</pre>
+                <p><em>Add count of children to parent count.</em></p>
+                <p>Recalculates term counts by including items from child terms. Assumes all
+relevant children are already in the $terms argument.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$terms </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$taxonomy </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_types </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_stati </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    null
+                                            &mdash; <p>Will break from function if conditions are not met.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-mla-shortcode-support.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes\class-mla-shortcode-support.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on August 21st, 2016 at 17:14.
+                </section>
+            </section>
+        </section>
+    </footer>
 </div>
-<a name="%24term_list_item_specific_arguments" id="$term_list_item_specific_arguments"> </a><div class="element clickable property private $term_list_item_specific_arguments" data-toggle="collapse" data-target=".$term_list_item_specific_arguments .collapse">
-<h2>These are the default parameters for term list display</h2>
-<pre>$term_list_item_specific_arguments : array</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<p class="long_description"></p>
-<table class="table table-bordered"><tr>
-<th>since</th>
-<td>2.30</td>
-</tr></table>
-</div></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="row"><footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
-            generated on 2016-06-05T17:27:59-07:00.<br></footer></div>
-</div>
+
 </body>
 </html>

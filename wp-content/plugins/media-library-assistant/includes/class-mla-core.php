@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.31';
+	const CURRENT_MLA_VERSION = '2.33';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)
@@ -362,6 +362,39 @@ class MLACore {
 		wp_enqueue_style( MLAModal::JAVASCRIPT_MEDIA_MODAL_STYLES . '-bb' );
 	} // mla_wp_enqueue_media_action
 
+	/**
+	 * Add the WPML suppress All languages filter
+	 * 
+	 * The "add_action" for this function is in mla-plugin-loader.php, because the "initialize"
+	 * function above doesn't run in time.
+	 * Defined as public because it's an action.
+	 *
+	 * @since 2.32
+	 *
+	 * @return	void
+	 */
+	public static function mla_plugins_loaded_action_wpml(){
+		/*
+		 * Defined in /sitepress-multilingual-cms/sitepress.class.php
+		 */
+		add_filter( 'wpml_unset_lang_admin_bar', 'MLACore::wpml_unset_lang_admin_bar', 10, 1 );
+//error_log( __LINE__ . " wpml_unset_lang_admin_bar added ", 0 );
+	} // mla_plugins_loaded_action_wpml
+
+	/**
+	 * Restores All languages view to Media/Assistant submenu screen
+	 *
+	 * @since 2.32
+	 *
+	 * @param	boolean	true to suppress All languages, false to allow it
+	 */
+	public static function wpml_unset_lang_admin_bar( $suppress_all_languages ) {
+		global $pagenow, $mode;
+		
+//error_log( __LINE__ . " wpml_unset_lang_admin_bar( {$pagenow}, {$mode}, {$suppress_all_languages}  ) returning " . var_export( $pagenow === 'upload.php' && $mode === 'grid', true ), 0 );
+		return $pagenow === 'upload.php' && $mode === 'grid';
+	}
+	
 	/**
 	 * Load a plugin text domain and alternate debug file
 	 * 
@@ -711,6 +744,7 @@ class MLACore {
 	 * @return	boolean|string
 	 *			true if the taxonomy is supported in this way else false.
 	 *			string if $tax_name is '' and $support_type is 'filter', returns the taxonomy to filter by.
+	 *			string if $support_type is 'metakey', returns the custom field to filter by.
 	 */
 	public static function mla_taxonomy_support($tax_name, $support_type = 'support') {
 		$tax_options =  MLACore::mla_get_option( MLACoreOptions::MLA_TAXONOMY_SUPPORT );
@@ -775,6 +809,22 @@ class MLACore {
 				}
 
 				return ( $tax_name == $tax_filter );
+			case 'metakey':
+				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+					return isset( $_REQUEST['tax_metakey'] ) ? $_REQUEST['tax_metakey'] : '';
+				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
+				}
+
+				return isset( $tax_options['tax_metakey'] ) ? $tax_options['tax_metakey'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
+			case 'metakey_sort':
+				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+					return isset( $_REQUEST['tax_metakey_sort'] ) ? $_REQUEST['tax_metakey_sort'] : '';
+				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
+				}
+
+				return isset( $tax_options['tax_metakey_sort'] ) ? $tax_options['tax_metakey_sort'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
 			default:
 				return false;
 		} // $support_type
@@ -787,7 +837,9 @@ class MLACore {
 	 *
 	 * @param	string	Optional. 'support' (default), 'quick-edit', 'flat-checklist', 'term-search' or 'filter'
 	 *
-	 * @return	array	taxonomies assigned to $support_type; can be empty.
+	 * @return	array|string
+	 *			array	taxonomies assigned to $support_type; can be empty.
+	 *			string if $support_type is 'metakey', returns the custom field to filter by.
 	 */
 	public static function mla_supported_taxonomies($support_type = 'support') {
 		$tax_options =  MLACore::mla_get_option( MLACoreOptions::MLA_TAXONOMY_SUPPORT );
@@ -840,11 +892,18 @@ class MLACore {
 				}
 
 				return (array) isset( $tax_options['tax_filter'] ) ? $tax_options['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
+			case 'metakey':
+				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+					return isset( $_REQUEST['tax_metakey'] ) ? $_REQUEST['tax_metakey'] : '';
+				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
+				}
+
+				return isset( $tax_options['tax_metakey'] ) ? $tax_options['tax_metakey'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 			default:
 				return array();
 		} // $support_type
 	} // mla_supported_taxonomies
-
 
 	/**
 	 * Evaluate support information for custom field mapping

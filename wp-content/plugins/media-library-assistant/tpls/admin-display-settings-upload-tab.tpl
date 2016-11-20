@@ -80,7 +80,7 @@
 	<p class="search-box" style="margin-top: 1em">
 		<label class="screen-reader-text" for="mla-search-optional-uploads-input">[+Search Known MIME+]:</label>
 		<input type="search" id="mla-search-optional-uploads-input" name="s" value="[+s+]" />
-		<input type="submit" name="mla-optional-uploads-search" id="mla-search-optional-uploads-submit" class="button" value="Search Types" />
+		<input type="submit" name="mla-optional-uploads-search" id="mla-search-optional-uploads-submit" class="button" value="[+Search Types+]" />
 		<span class="description"><br />[+To search by+]</span>
 	</p>
 </form>

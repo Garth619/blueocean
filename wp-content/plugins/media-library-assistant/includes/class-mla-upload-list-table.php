@@ -627,7 +627,7 @@ class MLA_Upload_List_Table extends WP_List_Table {
 				$columns[ $key ][ 1 ] = true;
 			}
 		} else {
-			$columns['menu_order'][ 1 ] = true;
+			$columns['name'][ 1 ] = true;
 		}
 
 		return $columns;

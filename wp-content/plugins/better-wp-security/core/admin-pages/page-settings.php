@@ -2,7 +2,7 @@
 
 
 final class ITSEC_Settings_Page {
-	private $version = 1.2;
+	private $version = 1.4;
 
 	private $self_url = '';
 	private $modules = array();
@@ -69,10 +69,19 @@ final class ITSEC_Settings_Page {
 		}
 
 		$vars = array(
-			'ajax_action'  => 'itsec_settings_page',
-			'ajax_nonce'   => wp_create_nonce( 'itsec-settings-nonce' ),
-			'translations' => $this->translations,
+			'ajax_action'         => 'itsec_settings_page',
+			'ajax_nonce'          => wp_create_nonce( 'itsec-settings-nonce' ),
+			'show_security_check' => ITSEC_Modules::get_setting( 'global', 'show_security_check' ),
+			'translations'        => $this->translations,
 		);
+
+		if ( $vars['show_security_check'] ) {
+			ITSEC_Modules::set_setting( 'global', 'show_security_check', false );
+
+			if ( ! empty( $_GET['module'] ) && 'security-check' === $_GET['module'] ) {
+				$vars['show_security_check'] = false;
+			}
+		}
 
 		wp_enqueue_script( 'itsec-settings-page-script', plugins_url( 'js/script.js', __FILE__ ), array(), $this->version, true );
 		wp_localize_script( 'itsec-settings-page-script', 'itsec_page', $vars );
@@ -131,6 +140,10 @@ final class ITSEC_Settings_Page {
 
 		$method = ( isset( $_POST['method'] ) && is_string( $_POST['method'] ) ) ? $_POST['method'] : '';
 		$module = ( isset( $_POST['module'] ) && is_string( $_POST['module'] ) ) ? $_POST['module'] : '';
+
+		if ( empty( $GLOBALS['hook_suffix'] ) ) {
+			$GLOBALS['hook_suffix'] = 'toplevel_page_itsec';
+		}
 
 
 		if ( false === check_ajax_referer( 'itsec-settings-nonce', 'nonce', false ) ) {
@@ -429,7 +442,7 @@ final class ITSEC_Settings_Page {
 		<h1>
 			<?php _e( 'iThemes Security', 'better-wp-security' ); ?>
 			<a href="<?php echo esc_url( ITSEC_Core::get_logs_page_url() ); ?>" class="page-title-action"><?php _e( 'View Logs', 'better-wp-security' ); ?></a>
-			<a href="<?php echo esc_url( apply_filters( 'itsec_support_url', 'https://wordpress.org/support/plugin/better-wp-security' ) ); ?>" target="_blank" class="page-title-action"><?php _e( 'Support', 'better-wp-security' ); ?></a>
+			<a href="<?php echo esc_url( apply_filters( 'itsec_support_url', 'https://wordpress.org/support/plugin/better-wp-security' ) ); ?>" target="_blank" rel="noopener noreferrer" class="page-title-action"><?php _e( 'Support', 'better-wp-security' ); ?></a>
 		</h1>
 
 		<div id="itsec-settings-messages-container">
@@ -482,7 +495,7 @@ final class ITSEC_Settings_Page {
 									<li id="itsec-module-card-<?php echo $id; ?>" class="itsec-module-card <?php echo implode( ' ', $classes ); ?>" data-module-id="<?php echo $id; ?>">
 										<div class="itsec-module-card-content">
 											<?php if ( $module->upsell ) : ?>
-												<a href="<?php echo esc_url( $module->upsell_url ); ?>" target="_blank" class="itsec-pro-upsell">&nbsp;</a>
+												<a href="<?php echo esc_url( $module->upsell_url ); ?>" target="_blank" rel="noopener noreferrer" class="itsec-pro-upsell">&nbsp;</a>
 											<?php endif; ?>
 											<h2><?php echo esc_html( $module->title ); ?></h2>
 											<?php if ( $module->pro ) : ?>

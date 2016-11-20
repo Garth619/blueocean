@@ -66,6 +66,10 @@ class MLATest {
 			MLAQuery::mla_localize_default_columns_array();
 		}
 		
+		if ( class_exists( 'MLA_View_List_Table' ) ) {
+			MLA_View_List_Table::mla_localize_default_columns_array();
+		}
+		
 		if ( class_exists( 'MLA_Upload_List_Table' ) ) {
 			MLA_Upload_List_Table::mla_localize_default_columns_array();
 		}
@@ -74,8 +78,8 @@ class MLATest {
 			MLA_Upload_Optional_List_Table::mla_localize_default_columns_array();
 		}
 		
-		if ( class_exists( 'MLA_View_List_Table' ) ) {
-			MLA_View_List_Table::mla_localize_default_columns_array();
+		if ( class_exists( 'MLA_Example_List_Table' ) ) {
+			MLA_Example_List_Table::mla_localize_default_columns_array();
 		}
 	}
 

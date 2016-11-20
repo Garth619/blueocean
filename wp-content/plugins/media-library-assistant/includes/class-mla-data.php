@@ -673,7 +673,7 @@ class MLAData {
 	 *
 	 * @param	string	arguments, e.g., ('d/m/Y H:i:s' , "arg, \" two" ) without parens
 	 *
-	 * @return	array	individual arguments, e.g. array( 0 => 'd/m/Y H:i:s', 1 => 'arg, \" two' )
+	 * @return	array	individual arguments, e.g. array( 0 => 'd/m/Y H:i:s', 1 => 'arg, " two' )
 	 */
 	private static function _parse_arguments( $argument_string ) {
 		$argument_string = trim( $argument_string, " \n\t\r\0\x0B," );
@@ -774,6 +774,43 @@ class MLAData {
 			case 'commas':
 				if ( is_numeric( $value ) ) {
 					$value = number_format( (float)$value );
+				}
+				break;
+			case 'kbmb':
+				if ( is_numeric( $value ) ) {
+					$number = (string) $value;
+				} else {
+					$index = 0;
+					$number = '';
+					while ( $index < strlen( $value ) ) {
+						if ( ctype_digit( $value[ $index ] ) || ( '.' == $value[ $index ] ) ) {
+							$number .= $value[ $index ];
+						}
+						$index++;
+					}
+				}
+
+				$mb_suffix = ' MB';
+				$threshold = 10240;
+				$kb_suffix = ' KB';
+
+				if ( is_array( $args['args'] ) ) {
+					$mb_suffix = isset( $args['args'][2] ) ? $args['args'][2] : $mb_suffix;
+					$kb_suffix = isset( $args['args'][1] ) ? $args['args'][1] : $kb_suffix;
+					$args['args'] = $args['args'][0];
+				}
+				
+				if ( is_numeric( $args['args'] ) ) {
+					$threshold = absint( $args['args'] );
+				}
+
+				$number = (float) $number;
+				if ( 1048576 < $number ) {
+					$value = number_format( ( $number/1048576 ), 3 ) . $mb_suffix;
+				} elseif ( $threshold < $number ) {
+					$value = number_format( ( $number/1024 ), 3 ) . $kb_suffix;
+				} else {
+					$value = number_format( $number );
 				}
 				break;
 			case 'timestamp':
@@ -937,7 +974,14 @@ class MLAData {
 					if ( isset( $_REQUEST[ $value['value'] ] ) ) {
 						$record = $_REQUEST[ $value['value'] ];
 					} else {
-						$record = '';
+						// Look for compound names, e.g., tax_input.attachment_category
+						$key_array = explode( '.', $value['value'] );
+						if ( 1 < count( $key_array ) && isset( $_REQUEST[ $key_array[0] ] ) ) {
+							$array_value = array( $key_array[0] => $_REQUEST[ $key_array[0] ] );
+							$record = MLAData::mla_find_array_element( $value['value'], $array_value, $value['option'], false, ',' );
+						} else {
+							$record = '';
+						}
 					}
 
 					if ( is_scalar( $record ) ) {
@@ -968,14 +1012,28 @@ class MLAData {
 						$field = 'name';
 					}
 					
-					if ( 0 < $post_id ) {
-						$terms = get_object_term_cache( $post_id, $taxonomy );
-						if ( false === $terms ) {
-							$terms = wp_get_object_terms( $post_id, $taxonomy );
-							wp_cache_add( $post_id, $terms, $taxonomy . '_relationships' );
+					// Look for compound taxonomy.slug notation
+					$matches = explode( '.', $taxonomy );
+					if ( 2 === count( $matches ) ) {
+						$slug = str_replace( '{+', '[+', str_replace( '+}', '+]', stripslashes( $matches[1] ) ) );
+						$replacement_values = MLAData::mla_expand_field_level_parameters( $slug, $query, $markup_values );
+						$slug = MLAData::mla_parse_template( $slug, $replacement_values );
+						$term = get_term_by( 'slug', $slug, $matches[0] );
+						if ( false === $term ) {
+							break;
 						}
+						
+						$terms = array( $term );
 					} else {
-						break;
+						if ( 0 < $post_id ) {
+							$terms = get_object_term_cache( $post_id, $taxonomy );
+							if ( false === $terms ) {
+								$terms = wp_get_object_terms( $post_id, $taxonomy );
+								wp_cache_add( $post_id, $terms, $taxonomy . '_relationships' );
+							}
+						} else {
+							break;
+						}
 					}
 
 					$text = '';
@@ -1236,7 +1294,7 @@ class MLAData {
 			}
 
 			if ( false !== strpos( $tail, ',' ) ) {
-				$match_count = preg_match( '/([^,]+)(,(text|single|export|unpack|array|multi|commas|raw|attr|url|timestamp|date|fraction|substr))(\(([^)]+)\))*/', $tail, $matches );
+				$match_count = preg_match( '/([^,]+)(,(text|single|export|unpack|array|multi|commas|raw|attr|url|kbmb|timestamp|date|fraction|substr))(\(([^)]+)\))*/', $tail, $matches );
 				if ( 1 == $match_count ) {
 					$result['value'] = $matches[1];
 					if ( ! empty( $matches[5] ) ) {
@@ -1248,34 +1306,10 @@ class MLAData {
 					} else {
 						$args = '';
 					}
-	
-					if ( 'commas' == $matches[3] ) {		
+
+					if ( in_array( $matches[3], array( 'commas', 'raw', 'attr', 'url', 'kbmb', 'timestamp', 'date', 'fraction', 'substr' ) ) ) {
 						$result['option'] = 'text';
-						$result['format'] = 'commas';
-					} elseif ( 'raw' == $matches[3] ) {		
-						$result['option'] = 'text';
-						$result['format'] = 'raw';
-					} elseif ( 'attr' == $matches[3] ) {		
-						$result['option'] = 'text';
-						$result['format'] = 'attr';
-					} elseif ( 'url' == $matches[3] ) {		
-						$result['option'] = 'text';
-						$result['format'] = 'url';
-					} elseif ( 'timestamp' == $matches[3] ) {		
-						$result['option'] = 'text';
-						$result['format'] = 'timestamp';
-						$result['args'] = $args;
-					} elseif ( 'date' == $matches[3] ) {		
-						$result['option'] = 'text';
-						$result['format'] = 'date';
-						$result['args'] = $args;
-					} elseif ( 'fraction' == $matches[3] ) {		
-						$result['option'] = 'text';
-						$result['format'] = 'fraction';
-						$result['args'] = $args;
-					} elseif ( 'substr' == $matches[3] ) {		
-						$result['option'] = 'text';
-						$result['format'] = 'substr';
+						$result['format'] = $matches[3];
 						$result['args'] = $args;
 					} else {
 						$result['option'] = $matches[3];
@@ -1525,10 +1559,11 @@ class MLAData {
 	 * @param array PHP nested arrays
 	 * @param string data option; 'text'|'single'|'export'|'array'|'multi'
 	 * @param boolean keep existing values - for 'multi' option
+	 * @param string inter-element glue for text implode
 	 *
 	 * @return mixed string or array value matching key(.key ...) or ''
 	 */
-	public static function mla_find_array_element( $needle, $haystack, $option, $keep_existing = false ) {
+	public static function mla_find_array_element( $needle, $haystack, $option, $keep_existing = false, $glue = ', ' ) {
 		$key_array = explode( '.', $needle );
 		if ( is_array( $key_array ) ) {
 			foreach ( $key_array as $key ) {
@@ -1610,7 +1645,7 @@ class MLAData {
 					return $haystack;
 					break;
 				default:
-					$haystack = self::_bin_to_utf8( @implode( ', ', $haystack ) );
+					$haystack = self::_bin_to_utf8( @implode( $glue, $haystack ) );
 			} // $option
 		} // is_array
 

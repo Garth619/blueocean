@@ -1,11 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2016-06-05 18:54-0700\n"
-"PO-Revision-Date: 2016-06-05 18:55-0700\n"
-"Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
+"POT-Creation-Date: 2016-08-21 20:03-0700\n"
+"PO-Revision-Date: 2016-08-21 20:03-0700\n"
 "Language-Team: David Lingren <david@fairtradejudaica.org>\n"
-"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,6 +13,8 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c;_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
+"Language: en_US\n"
 "X-Poedit-SearchPath-0: includes\n"
 "X-Poedit-SearchPath-1: tests\n"
 "X-Poedit-SearchPath-2: index.php\n"
@@ -191,8 +191,13 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Use the \"<strong>List Filter</strong>\" option to select the taxonomy on "
-"which to filter the Assistant table listing."
+"Use the \"<strong>List Filter</strong>\" option to select the taxonomy (or "
+"custom field) on which to filter the Assistant table listing."
+msgstr ""
+
+msgid ""
+"To <strong>filter on a custom field</strong>, enter the field name and "
+"select ASC (Ascending) ot DESC (Descending) order."
 msgstr ""
 
 msgid "Media/Assistant Screen Options"
@@ -1423,6 +1428,129 @@ msgstr ""
 msgid "PARENT"
 msgstr ""
 
+msgctxt "list_table_column"
+msgid "Version"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Installed Version"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "File Name"
+msgstr ""
+
+msgctxt "list_table_column"
+msgid "Tags"
+msgstr ""
+
+#. translators: 1: column_name 2: column_values
+#, php-format
+msgid "column_default: %1$s, %2$s"
+msgstr ""
+
+msgid "Install this plugin"
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Update this plugin"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+#. translators: 1: plugin name
+#, php-format
+msgid "Example plugin \"%1$s\" not found"
+msgstr ""
+
+#. translators: 1: plugin name, 2: WP_Error message
+#, php-format
+msgid "Example plugin \"%1$s\" fs_connect failed; no action taken. Error: %2$s"
+msgstr ""
+
+#. translators: 1: plugin name
+#, php-format
+msgid "Example plugin \"%1$s\" fs_connect failed; no action taken"
+msgstr ""
+
+#. translators: 1: plugin name, 2: WP_Error message
+#, php-format
+msgid ""
+"Example plugin \"%1$s\" install_package failed; no action taken. Error: %2$s"
+msgstr ""
+
+#. translators: 1: plugin name, 2: WP_Error message
+#, php-format
+msgid "Example plugin \"%1$s\" remove old single file failed."
+msgstr ""
+
+#. translators: 1: plugin name
+#, php-format
+msgid "Example plugin \"%1$s\" already installed; no action taken"
+msgstr ""
+
+#. translators: 1: plugin name
+#, php-format
+msgid "Example plugin \"%1$s\" installed"
+msgstr ""
+
+#. translators: 1: plugin name
+#, php-format
+msgid "Example plugin \"%1$s\" not installed; no action taken"
+msgstr ""
+
+#. translators: 1: plugin name
+#, php-format
+msgid "Example plugin \"%1$s\" updated"
+msgstr ""
+
+msgid "Network"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Active"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Active"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Inactive"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Inactive"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Network"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Network"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Uninstalled"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Uninstalled"
+msgstr ""
+
 msgid "All"
 msgstr ""
 
@@ -1433,11 +1561,6 @@ msgid "Filter by"
 msgstr ""
 
 msgid "Not Supported"
-msgstr ""
-
-#. translators: 1: column_name 2: column_values
-#, php-format
-msgid "column_default: %1$s, %2$s"
 msgstr ""
 
 msgid "Edit"
@@ -1471,9 +1594,6 @@ msgid "Delete this item Permanently"
 msgstr ""
 
 msgid "Delete Permanently"
-msgstr ""
-
-msgid "Download"
 msgstr ""
 
 msgid "View"
@@ -1609,9 +1729,6 @@ msgid "post/parent results for"
 msgstr ""
 
 msgid "search results for"
-msgstr ""
-
-msgid "Update"
 msgstr ""
 
 msgid "All Post Types"
@@ -1775,22 +1892,6 @@ msgstr ""
 #. translators: 1: ERROR tag 2: slug
 #, php-format
 msgid "%1$s: Did not find view \"%2$s\""
-msgstr ""
-
-msgctxt "table_view_singular"
-msgid "Active"
-msgstr ""
-
-msgctxt "table_view_plural"
-msgid "Active"
-msgstr ""
-
-msgctxt "table_view_singular"
-msgid "Inactive"
-msgstr ""
-
-msgctxt "table_view_plural"
-msgid "Inactive"
 msgstr ""
 
 msgctxt "table_view_singular"
@@ -1969,6 +2070,9 @@ msgstr ""
 #. translators: 1: ERROR tag 2: option name 3: action, e.g., update, delete, reset
 #, php-format
 msgid "%1$s: Custom %2$s unknown action \"%3$s\""
+msgstr ""
+
+msgid "Custom Field"
 msgstr ""
 
 msgid "Support"
@@ -2436,6 +2540,9 @@ msgstr ""
 msgid "Upload types per page"
 msgstr ""
 
+msgid "Plugins per page"
+msgstr ""
+
 msgid "No view slug found"
 msgstr ""
 
@@ -2535,9 +2642,6 @@ msgstr ""
 msgid ""
 "provides flat or hierarchical lists, dropdown controls and checkbox lists of "
 "taxonomy terms."
-msgstr ""
-
-msgid "wait a bit longer"
 msgstr ""
 
 msgid "Shortcodes made available by this plugin"
@@ -2674,9 +2778,6 @@ msgid ""
 "such as PDF documents."
 msgstr ""
 
-msgid "Inactive"
-msgstr ""
-
 msgid ""
 "Check this box if you want to remove this entry from the list of Upload MIME "
 "Types returned by get_allowed_mime_types()."
@@ -2686,6 +2787,9 @@ msgid "Known File Extension/MIME Type Associations"
 msgstr ""
 
 msgid "Search Known MIME Types"
+msgstr ""
+
+msgid "Search Types"
 msgstr ""
 
 msgid "To search by extension, use \".\", e.g., \".doc\""
@@ -2737,9 +2841,6 @@ msgid "Add Upload MIME Type"
 msgstr ""
 
 msgid "Search Known Types"
-msgstr ""
-
-msgid "Active"
 msgstr ""
 
 msgid "Go to"
@@ -2902,6 +3003,44 @@ msgid ""
 "Click %1$s to update the \"Enable IPTC/EXIF mapping...\" checkbox and/or all "
 "rule changes and additions at once. <strong>No rule mapping will be "
 "performed.</strong>"
+msgstr ""
+
+msgid ""
+"In this tab you can browse the list of MLA example plugins, install or "
+"update them in the Plugins/Installed Plugins area and see which examples you "
+"have already installed. <strong>To activate, deactivate or delete</strong> "
+"the plugins you must go to the Plugins/Installed Plugins admin submenu."
+msgstr ""
+
+#. translators: 1: Documentation hyperlink
+#, php-format
+msgid ""
+"You can find more information about using the example plugins in the %1$s "
+"section of the Documentation or by clicking the <strong>\"Help\"</strong> "
+"tab in the upper-right corner of this screen."
+msgstr ""
+
+msgid "Example plugin documentation"
+msgstr ""
+
+msgid "The Example Plugins"
+msgstr ""
+
+msgid "Example Plugins"
+msgstr ""
+
+msgid "Search Example Plugins"
+msgstr ""
+
+msgid "Search Plugins"
+msgstr ""
+
+msgid "Searches Name, Description, File Name and Tags"
+msgstr ""
+
+#. translators: 1: bulk_action, e.g., single_item_delete, single_item_edit
+#, php-format
+msgid "Empty mla_item_ID - \"%1$s\""
 msgstr ""
 
 msgid "Debug settings saved."

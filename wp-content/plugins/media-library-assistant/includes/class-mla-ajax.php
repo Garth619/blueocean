@@ -32,6 +32,8 @@ class MLA_Ajax {
 	 */
 	public static function mla_admin_init_action( ) {
 		//error_log( __LINE__ . ' DEBUG: MLA_Ajax::mla_admin_init_action $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+		MLACore::mla_debug_add( "MLA_Ajax::mla_admin_init_action \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+
 		/*
 		 * If there's no action variable, we have nothing more to do
 		 */
@@ -231,7 +233,7 @@ class MLA_Ajax {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
 			MLAData::initialize();
 		}
-		
+
 		$results = MLAData::mla_update_single_item( $post_id, $_REQUEST );
 		if ( false !== strpos( $results['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
 			wp_die( $results['message'] );
@@ -243,7 +245,7 @@ class MLA_Ajax {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-list-table.php' );
 			MLA_List_Table::mla_admin_init_action();
 		}
-		
+
 		//	Create an instance of our package class and echo the new HTML
 		$MLAListTable = apply_filters( 'mla_list_table_new_instance', NULL );
 		if ( is_null( $MLAListTable ) ) {

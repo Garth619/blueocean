@@ -134,10 +134,12 @@ class MLAModal {
 	 * @return	array	( 'class' => $class_array, 'value' => $value_array, 'text' => $text_array )
 	 */
 	public static function mla_terms_options( $markup ) {
+//error_log( __LINE__ . ' mla_terms_options markup = ' . var_export( $markup, true ), 0 );
 		$match_count = preg_match_all( "#\<option(( class=\"([^\"]+)\" )|( ))value=((\'([^\']+)\')|(\"([^\"]+)\"))([^\>]*)\>([^\<]*)\<.*#", $markup, $matches );
 		if ( ( $match_count == false ) || ( $match_count == 0 ) ) {
 			return array( 'class' => array( '' ), 'value' => array( '0' ), 'text' => array( 'Show all terms' ) );
 		}
+//error_log( __LINE__ . ' mla_terms_options matches = ' . var_export( $matches, true ), 0 );
 
 		$class_array = array();
 		$value_array = array();
@@ -201,6 +203,7 @@ class MLAModal {
 			'termsClass' => array(),
 			'termsIndent' => '&nbsp;',
 			'termsTaxonomy' => '',
+			'termsCustom' => false,
 			'termsText' => array(),
 			'termsValue' => array(),
 			);
@@ -247,6 +250,7 @@ class MLAModal {
 
 		self::$mla_media_modal_settings['termsTaxonomy'] =  MLACore::mla_taxonomy_support('', 'filter');
 		$terms_options = self::mla_terms_options( MLA_List_Table::mla_get_taxonomy_filter_dropdown() );
+		self::$mla_media_modal_settings['termsCustom'] = ( MLACoreOptions::MLA_FILTER_METAKEY ==  self::$mla_media_modal_settings['termsTaxonomy'] );
 		self::$mla_media_modal_settings['termsClass'] = $terms_options['class'];
 		self::$mla_media_modal_settings['termsValue'] = $terms_options['value'];
 		self::$mla_media_modal_settings['termsText'] = $terms_options['text'];
@@ -305,7 +309,7 @@ class MLAModal {
 			'filterMime' => 'all',
 			'filterUploaded' => 'all',
 			'filterMonth' => 0,
-			'filterTerm' => 0,
+			'filterTerm' => self::$mla_media_modal_settings['termsCustom'] ? MLACoreOptions::ALL_MLA_FILTER_METAKEY : 0,
 			'searchConnector' => $search_defaults['search_connector'],
 			'searchFields' => $search_defaults['search_fields'],
 			'searchValue' => '',

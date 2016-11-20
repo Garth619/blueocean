@@ -115,7 +115,7 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Handler for filter 'get_user_option_managesettings_page_mla-settings-menu-viewcolumnshidden'
+	 * Handler for filter 'get_user_option_managesettings_page_mla-settings-menu-uploadcolumnshidden'
 	 *
 	 * Required because the screen.php get_hidden_columns function only uses
 	 * the get_user_option result. Set when the file is loaded because the object
@@ -365,7 +365,7 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 	 * @return	array	Column information,e.g., array(0 => 'ID_parent, 1 => 'title_name')
 	 */
 	function get_hidden_columns( ) {
-		$columns = get_user_option( 'managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-viewcolumnshidden' );
+		$columns = get_user_option( 'managesettings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG . '-uploadcolumnshidden' );
 
 		if ( is_array( $columns ) ) {
 			return $columns;
@@ -394,7 +394,7 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 				$columns[ $key ][ 1 ] = true;
 			}
 		} else {
-			$columns['menu_order'][ 1 ] = true;
+			$columns['name'][ 1 ] = true;
 		}
 
 		return $columns;
