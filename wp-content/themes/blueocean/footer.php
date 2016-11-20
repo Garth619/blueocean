@@ -75,6 +75,6 @@
   ga('send', 'pageview');
 
 </script>
-garrett
+
 </body>
 </html>
