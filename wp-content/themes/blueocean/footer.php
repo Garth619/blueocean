@@ -24,7 +24,7 @@
 					<a href="<?php the_field('link_to_google_maps','option'); ?>" target="_blank"><span style="display:inline" itemprop="postalCode"><?php the_field('zip_code','option'); ?></span></a>
 					<!-- <span style="margin-top:8px;">Call for a reservation</span> -->
 					<span style="margin-top:8px;" itemprop="telephone"><?php the_field('phone','option'); ?></span>
-					<span id="copy"><?php the_field('copyright','option'); ?></span>
+					<span id="copy">Copyright <?php echo date("Y"); ?> Blue Ocean</span>
 				</div><!-- schema -->
 			</div><!-- footer left -->
 			<div id="footer_center">
@@ -38,13 +38,13 @@
 				<span><a class="fancybox" href="#eclub_form">Join Our E-Club<img class="arrow" src="<?php bloginfo( 'template_directory' ); ?>/images/arrow.png"/></a></span>
 				<div id="footer_media">
 					<a target="_blank" href="<?php the_field('facebook','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_facebook.png"/></a>
-					<a target="_blank" href="<?php the_field('google_plus','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_googleplus.png"/></a>
-					<a target="_blank" href="<?php the_field('twitter','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_twitter.png"/></a>
-					<a target="_blank" href="<?php the_field('four_square','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_foursquare.png"/></a>
+<!-- 					<a target="_blank" href="<?php the_field('google_plus','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_googleplus.png"/></a> -->
+<!-- 					<a target="_blank" href="<?php the_field('twitter','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_twitter.png"/></a> -->
+<!-- 					<a target="_blank" href="<?php the_field('four_square','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_foursquare.png"/></a> -->
 					<a target="_blank" href="<?php the_field('yelp','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_yelp.png"/></a>
 					<a target="_blank" href="<?php the_field('instagram','option'); ?>"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_instagram.png"/></a>
 				</div>
-				<span style="margin-top: 10px;"><a href="<?php bloginfo( 'url' ); ?>/make-an-online-reservation">Make an Online Reservation<img class="arrow" src="<?php bloginfo( 'template_directory' ); ?>/images/arrow.png"/></a></span>
+				<span style="margin-top: 10px;"><a href="tel:760.434.4959">Call For a Reservation<br/>760.434.4959</a></span>
 			</div><!-- footer right -->
 		</div><!-- footer inner -->
 	</div><!-- #footer -->

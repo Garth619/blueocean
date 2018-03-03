@@ -64,13 +64,13 @@ body.logged-in {overflow: auto;}
 					<!-- <img id="sushi" src="<?php bloginfo( 'template_directory' ); ?>/images/sushi.png"/> -->
 					<div style="clear:both;"></div>
 					<div id="reservation">
-						<a class="call" target="_blank" href="https://www.seatme.yelp.com/restaurants/dd947e39-b41b-49f9-95b7-e3ccb6e57365"><span>Make a reservation</span><img id="mobile_arrow" src="<?php bloginfo( 'template_directory' ); ?>/images/arrow.png"/>
+						<a style="display: none;" class="call" target="_blank" href="https://www.seatme.yelp.com/restaurants/dd947e39-b41b-49f9-95b7-e3ccb6e57365"><span>Make a reservation</span><img id="mobile_arrow" src="<?php bloginfo( 'template_directory' ); ?>/images/arrow.png"/>
 						</a>
 					</div><!-- reservation -->
 					<div id="rest_info">
 					<div itemscope itemtype="http://schema.org/LocalBusiness">
 					<div id="mobile_address">
-					<a style="display:block;font-weight:700" href="tel:7604344959"><span itemprop="telephone">Call: <?php the_field('phone','option'); ?></span></a><br/>
+					<a style="display:block;font-weight:700" href="tel:<?php the_field('phone','option'); ?>">Call For A Reservation: <br/><span style="border-radius:5px;margin-top:15px;color:#186E89;background:#fff;padding:10px 15px;display: inline-block" itemprop="telephone"><?php the_field('phone','option'); ?></span></a><br/>
 						<a href="<?php the_field('link_to_google_maps','option'); ?>" target="_blank"><span itemprop="name"><?php the_field('name','option'); ?></span></a><br/>
 					<a href="<?php the_field('link_to_google_maps','option'); ?>" target="_blank"><span itemprop="streetAddress"><?php the_field('street_address','option'); ?></span></a><br/>
 					<a href="<?php the_field('link_to_google_maps','option'); ?>" target="_blank"><span style="display:inline" itemprop="addressLocality"><?php the_field('city','option'); ?></span></a>
@@ -80,9 +80,9 @@ body.logged-in {overflow: auto;}
 					</div>
 					<div id="mobile_icons" style="padding:4px 0 20px 0;">
 						<a href="https://www.facebook.com/BlueOceanSD" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_facebook.png"/></a>
-						<a href="https://plus.google.com/+BlueOceanRobataSushiBarCarlsbad/posts" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_googleplus.png"/></a>
-						<a href="https://twitter.com/blueoceanrobata" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_twitter.png"/></a>
-						<a href="https://foursquare.com/v/blue-ocean/52c0c05711d2945c21e5e5bc" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_foursquare.png"/></a>
+<!-- 						<a href="https://plus.google.com/+BlueOceanRobataSushiBarCarlsbad/posts" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_googleplus.png"/></a> -->
+<!-- 						<a href="https://twitter.com/blueoceanrobata" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_twitter.png"/></a> -->
+<!-- 						<a href="https://foursquare.com/v/blue-ocean/52c0c05711d2945c21e5e5bc" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_foursquare.png"/></a> -->
 						<a href="http://www.yelp.com/biz/blue-ocean-robata-and-sushi-bar-carlsbad-2" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_yelp.png"/></a>
 						<a href="http://instagram.com/blueoceanrobatasushi#" target="_blank"><img src="<?php bloginfo( 'template_directory' ); ?>/images/footer_instagram.png"/></a>
 					</div>
